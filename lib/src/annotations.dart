@@ -1,25 +1,45 @@
+/// Base class for all Gherkin annotations.
+abstract class GherkinAnnotation {
 
-abstract class _GherkinAnnotation {
+  /// The value of the annotation.
+  /// eg. `@Given('I have a step')` => `I have a step`
   final String value;
-  const _GherkinAnnotation(this.value);
+
+  /// Creates a new instance of [GherkinAnnotation].
+  const GherkinAnnotation(this.value);
 }
 
-class Given extends _GherkinAnnotation {
+/// Given annotation.
+/// Used to mark a method as a Given step.
+class Given extends GherkinAnnotation {
+  /// Creates a new instance of [Given].
   const Given(String value) : super(value);
 }
 
-class When extends _GherkinAnnotation {
+/// When annotation.
+/// Used to mark a method as a When step.
+class When extends GherkinAnnotation {
+  /// Creates a new instance of [When].
   const When(String value) : super(value);
 }
 
-class Then extends _GherkinAnnotation {
+/// Then annotation.
+/// Used to mark a method as a Then step.
+class Then extends GherkinAnnotation {
+  /// Creates a new instance of [Then].
   const Then(String value) : super(value);
 }
 
-class And extends _GherkinAnnotation {
+/// And annotation.
+/// Used to mark a method as a And step.
+class And extends GherkinAnnotation {
+  /// Creates a new instance of [And].
   const And(String value) : super(value);
 }
 
-class But extends _GherkinAnnotation {
+/// But annotation.
+/// Used to mark a method as a But step.
+class But extends GherkinAnnotation {
+  /// Creates a new instance of [But].
   const But(String value) : super(value);
 }

@@ -1,6 +1,4 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
+/// Cucumber Dart library
 library;
 
 export 'src/cucumber_dart_base.dart';

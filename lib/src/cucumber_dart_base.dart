@@ -6,8 +6,63 @@ import 'package:cucumber_dart/src/model.dart';
 import 'package:cucumber_dart/src/regexp.dart';
 import 'package:test/test.dart';
 
+///
+/// Engine class to run Cucumber tests with Dart
+///
+/// Example:
+///
+/// ```dart
+/// import 'package:cucumber_dart/cucumber_dart.dart';
+///
+/// class StepDefs {
+///
+///   @Given(r'I have {int} "cukes" in my {string}')
+///   void iHaveCukesInMyBelly(int cukes, String belly) {
+///     print('Cukes: $cukes');
+///     print('Belly: $belly');
+///   }
+///
+///   @When(r'I wait {int} hour')
+///   void iWaitHour(int hour) {
+///     print('Hour: $hour');
+///   }
+///
+///   @Then(r'my belly should growl')
+///   void myBellyShouldGrowl() {
+///     print('Growl!');
+///   }
+///
+///   @And(r'I should have indigestion')
+///   void iShouldHaveIndigestion() {
+///     print('Indigestion!');
+///   }
+///
+/// }
+///
+/// void main() {
+///   CucumberDart.runFeatures('features', StepDefs());
+/// }
+///
+/// ```
+/// Featrure:
+///
+///   Feature: Eating cukes makes me full
+///     Given I have 42 "cukes" in my "belly"
+///     When I wait 1 hour
+///     Then my belly should growl
+///     And I should have indigestion
+///
+/// ```
 class CucumberDart {
-
+  ///
+  /// Runs all feature files in a directory
+  /// [featureDirectoryPath] is the path to the directory containing the feature files
+  /// [stepDefs] is the instance of the class containing the step definitions
+  /// Example:
+  /// ```dart
+  /// CucumberDart.runFeatures('features', StepDefs());
+  /// ```
+  ///
   static void runFeatures(featureDirectoryPath, stepDefs) {
     final featureDirectory = Directory(featureDirectoryPath);
     final featureFiles = featureDirectory.listSync().where(
@@ -18,80 +73,82 @@ class CucumberDart {
     }
   }
 
+  ///
+  /// Runs a single feature file
+  /// [featureFilePath] is the path to the feature file
+  /// [stepDefsInstance] is the instance of the class containing the step definitions
+  /// Example:
+  /// ```dart
+  /// CucumberDart.runFeatureFile('features/feature.feature', StepDefs());
+  /// ```
   static void runFeatureFile(featureFilePath, stepDefsInstance) {
-    // Read feature yaml file
-    final featureLines = File(featureFilePath).readAsLinesSync();
-    final feature = Feature.fromFeature(featureLines);
+    Feature feature = _readFeatureFile(featureFilePath);
     final stepDefs = reflect(stepDefsInstance);
 
+    // Parse the step definitions class to get all the invokable methods
     Map<String, MethodMirror> allMembers = _parseMembers(stepDefs);
-
-    final possibleSteps = [
-      CucumberRegex.givenStep,
-      CucumberRegex.whenStep,
-      CucumberRegex.thenStep,
-      CucumberRegex.andStep,
-      CucumberRegex.butStep,
-    ];
 
     for (var scenario in feature.scenarios) {
       _runScenario(
         scenario,
-        possibleSteps,
         allMembers,
         stepDefs,
       );
     }
   }
 
+  ///
+  /// Reads a feature file and returns a [Feature] object
+  /// [featureFilePath] is the path to the feature file
+  /// Example:
+  /// ```dart
+  /// Feature feature = CucumberDart.readFeatureFile('features/feature.feature');
+  /// ```
+  ///
+  static Feature _readFeatureFile(featureFilePath) {
+    final featureLines = File(featureFilePath).readAsLinesSync();
+    final feature = Feature.fromFeature(featureLines);
+    return feature;
+  }
+
+  ///
+  /// Parses the step definitions class and returns a map of all the methods
+  /// [stepDefs] is the instance of the class containing the step definitions
+  /// Example:
+  /// ```dart
+  /// Map<String, MethodMirror> allMembers = CucumberDart.parseMembers(stepDefs);
+  /// ```
+  ///
   static Map<String, MethodMirror> _parseMembers(InstanceMirror stepDefs) {
-    final givenMembers = <String, MethodMirror>{};
-    final whenMembers = <String, MethodMirror>{};
-    final thenMembers = <String, MethodMirror>{};
-    final andMembers = <String, MethodMirror>{};
-    final butMembers = <String, MethodMirror>{};
+    final allMembers = <String, MethodMirror>{};
     for (final member in stepDefs.type.instanceMembers.values) {
       final metadata = member.metadata;
       for (final meta in metadata) {
-        if (meta.reflectee is Given) {
-          givenMembers[meta.reflectee.value] = member;
-        }
-        if (meta.reflectee is When) {
-          whenMembers[meta.reflectee.value] = member;
-        }
-        if (meta.reflectee is Then) {
-          thenMembers[meta.reflectee.value] = member;
-        }
-        if (meta.reflectee is And) {
-          andMembers[meta.reflectee.value] = member;
-        }
-        if (meta.reflectee is But) {
-          butMembers[meta.reflectee.value] = member;
+        if (meta.reflectee is GherkinAnnotation) {
+          allMembers[meta.reflectee.value] = member;
         }
       }
     }
 
-    final allMembers = {
-      ...givenMembers,
-      ...whenMembers,
-      ...thenMembers,
-      ...andMembers,
-      ...butMembers,
-    };
     return allMembers;
   }
 
+  ///
+  /// Runs a single scenario
+  /// [scenario] is the scenario to run
+  /// [allMembers] is a map of all the methods
+  /// [stepDefs] is the instance of the class containing the step definitions
+  ///
   static void _runScenario(
     Scenario scenario,
-    List<RegExp> possibleSteps,
     Map<String, MethodMirror> allMembers,
     InstanceMirror stepDefs,
   ) {
+    // Run a Unit Test for each scenario
     test(scenario.name, () {
       for (var step in scenario.steps) {
         _runStep(
           step,
-          possibleSteps,
           allMembers,
           stepDefs,
         );
@@ -99,15 +156,20 @@ class CucumberDart {
     });
   }
 
+  ///
+  /// Runs a single step
+  /// [step] is the step to run
+  /// [allMembers] is a map of all the methods
+  /// [stepDefs] is the instance of the class containing the step definitions
+  ///
   static void _runStep(
     String step,
-    List<RegExp> possibleSteps,
     Map<String, MethodMirror> allMembers,
     InstanceMirror stepDefs,
   ) {
     print(step);
 
-    for (var possibleStep in possibleSteps) {
+    for (var possibleStep in CucumberRegex.possibleSteps) {
       if (possibleStep.hasMatch(step)) {
         final sanitizedStep = step
             .replaceAll(CucumberRegex.string, '{string}')
@@ -131,8 +193,15 @@ class CucumberDart {
     }
   }
 
+  ///
+  /// Extracts the ordered arguments from a step
+  /// [sanitizedStep] is the step with the placeholders
+  /// [step] is the step with the values
+  ///
   static List<dynamic> _extractOrderedArguments(
-      String sanitizedStep, String step) {
+    String sanitizedStep,
+    String step,
+  ) {
     final sanitizedStepWords = sanitizedStep.trim().split(' ');
     final stepWords = step.trim().split(' ');
     final orderedArguments = [];
