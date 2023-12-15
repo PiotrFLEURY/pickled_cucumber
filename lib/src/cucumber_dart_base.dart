@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'dart:mirrors';
 
 import 'package:cucumber_dart/cucumber_dart.dart';
 import 'package:cucumber_dart/src/model.dart';
 import 'package:cucumber_dart/src/regexp.dart';
+import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:test/test.dart';
 
 ///
@@ -16,23 +17,23 @@ import 'package:test/test.dart';
 ///
 /// class StepDefs {
 ///
-///   @Given(r'I have {int} "cukes" in my {string}')
+///   @Given('I have {int} "cukes" in my {string}')
 ///   void iHaveCukesInMyBelly(int cukes, String belly) {
 ///     print('Cukes: $cukes');
 ///     print('Belly: $belly');
 ///   }
 ///
-///   @When(r'I wait {int} hour')
+///   @When('I wait {int} hour')
 ///   void iWaitHour(int hour) {
 ///     print('Hour: $hour');
 ///   }
 ///
-///   @Then(r'my belly should growl')
+///   @Then('my belly should growl')
 ///   void myBellyShouldGrowl() {
 ///     print('Growl!');
 ///   }
 ///
-///   @And(r'I should have indigestion')
+///   @And('I should have indigestion')
 ///   void iShouldHaveIndigestion() {
 ///     print('Indigestion!');
 ///   }
@@ -58,55 +59,85 @@ class CucumberDart {
   /// Runs all feature files in a directory
   /// [featureDirectoryPath] is the path to the directory containing the feature files
   /// [stepDefs] is the instance of the class containing the step definitions
+  /// [fileSystem] is the file system to use
+  /// [testMethod] is the test method to use
   /// Example:
   /// ```dart
   /// CucumberDart.runFeatures('features', StepDefs());
   /// ```
   ///
-  static void runFeatures(featureDirectoryPath, stepDefs) {
-    final featureDirectory = Directory(featureDirectoryPath);
+  static (int success, int failing) runFeatures(
+    featureDirectoryPath,
+    stepDefs, {
+    FileSystem fileSystem = const LocalFileSystem(),
+    Function testMethod = test,
+  }) {
+    final featureDirectory = fileSystem.directory(featureDirectoryPath);
     final featureFiles = featureDirectory.listSync().where(
           (file) => file.path.endsWith('.feature'),
         );
+    int success = 0;
+    int failing = 0;
     for (final featureFile in featureFiles) {
-      runFeatureFile(featureFile.path, stepDefs);
+      final report = runFeatureFile(
+        fileSystem.file(featureFile.path),
+        stepDefs,
+        testMethod,
+      );
+      success += report.$1;
+      failing += report.$2;
     }
+    return (success, failing);
   }
 
   ///
   /// Runs a single feature file
-  /// [featureFilePath] is the path to the feature file
+  /// [featureFile] is the the feature file
   /// [stepDefsInstance] is the instance of the class containing the step definitions
+  /// [testMethod] is the test method to use
   /// Example:
   /// ```dart
   /// CucumberDart.runFeatureFile('features/feature.feature', StepDefs());
   /// ```
-  static void runFeatureFile(featureFilePath, stepDefsInstance) {
-    Feature feature = _readFeatureFile(featureFilePath);
+  static (int success, int failing) runFeatureFile(
+    File featureFile,
+    stepDefsInstance,
+    Function testMethod,
+  ) {
+    Feature feature = _readFeatureFile(featureFile);
     final stepDefs = reflect(stepDefsInstance);
 
     // Parse the step definitions class to get all the invokable methods
     Map<String, MethodMirror> allMembers = _parseMembers(stepDefs);
-
+    
+    int success = 0;
+    int failing = 0;
     for (var scenario in feature.scenarios) {
-      _runScenario(
+      final pass = _runScenario(
         scenario,
         allMembers,
         stepDefs,
+        testMethod,
       );
+      if (pass) {
+        success++;
+      } else {
+        failing++;
+      }
     }
+    return (success, failing);
   }
 
   ///
   /// Reads a feature file and returns a [Feature] object
-  /// [featureFilePath] is the path to the feature file
+  /// [featureFile] is the the feature file
   /// Example:
   /// ```dart
   /// Feature feature = CucumberDart.readFeatureFile('features/feature.feature');
   /// ```
   ///
-  static Feature _readFeatureFile(featureFilePath) {
-    final featureLines = File(featureFilePath).readAsLinesSync();
+  static Feature _readFeatureFile(File featureFile) {
+    final featureLines = featureFile.readAsLinesSync();
     final feature = Feature.fromFeature(featureLines);
     return feature;
   }
@@ -138,22 +169,30 @@ class CucumberDart {
   /// [scenario] is the scenario to run
   /// [allMembers] is a map of all the methods
   /// [stepDefs] is the instance of the class containing the step definitions
+  /// [testMethod] is the test method to use
   ///
-  static void _runScenario(
+  static bool _runScenario(
     Scenario scenario,
     Map<String, MethodMirror> allMembers,
     InstanceMirror stepDefs,
+    Function testMethod,
   ) {
-    // Run a Unit Test for each scenario
-    test(scenario.name, () {
-      for (var step in scenario.steps) {
-        _runStep(
-          step,
-          allMembers,
-          stepDefs,
-        );
-      }
-    });
+    try {
+      // Run a Unit Test for each scenario
+      testMethod(scenario.name, () {
+        for (var step in scenario.steps) {
+          _runStep(
+            step,
+            allMembers,
+            stepDefs,
+          );
+        }
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   ///
