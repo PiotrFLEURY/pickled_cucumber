@@ -3,6 +3,7 @@ import 'dart:mirrors';
 import 'package:cucumber_dart/cucumber_dart.dart';
 import 'package:cucumber_dart/src/model.dart';
 import 'package:cucumber_dart/src/regexp.dart';
+import 'package:cucumber_dart/src/test_code_builder.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:test/test.dart';
@@ -66,23 +67,28 @@ class CucumberDart {
   /// CucumberDart.runFeatures('features', StepDefs());
   /// ```
   ///
-  static (int success, int failing) runFeatures(
+  (int success, int failing) runFeatures(
     featureDirectoryPath,
     stepDefs, {
     FileSystem fileSystem = const LocalFileSystem(),
     Function testMethod = test,
+    TestCodeBuilder? codeBuilder,
   }) {
-    final featureDirectory = fileSystem.directory(featureDirectoryPath);
-    final featureFiles = featureDirectory.listSync().where(
-          (file) => file.path.endsWith('.feature'),
-        );
+    final stepDefsMirror = reflect(stepDefs);
+
+    List<Feature> features = parseFeatures(
+      fileSystem,
+      featureDirectoryPath,
+    );
+
     int success = 0;
     int failing = 0;
-    for (final featureFile in featureFiles) {
-      final report = runFeatureFile(
-        fileSystem.file(featureFile.path),
-        stepDefs,
+    for (final feature in features) {
+      final report = runFeature(
+        feature,
+        stepDefsMirror,
         testMethod,
+        codeBuilder: codeBuilder,
       );
       success += report.$1;
       failing += report.$2;
@@ -90,26 +96,39 @@ class CucumberDart {
     return (success, failing);
   }
 
+  List<Feature> parseFeatures(FileSystem fileSystem, featureDirectoryPath) {
+    final featureDirectory = fileSystem.directory(featureDirectoryPath);
+    final featureFiles = featureDirectory
+        .listSync()
+        .where(
+          (file) => file.path.endsWith('.feature'),
+        )
+        .toList();
+    final features = readFeatureFiles(
+      fileSystem,
+      featureFiles,
+    );
+    return features;
+  }
+
   ///
   /// Runs a single feature file
   /// [featureFile] is the the feature file
-  /// [stepDefsInstance] is the instance of the class containing the step definitions
+  /// [stepDefs] is the mirror of the class containing the step definitions
   /// [testMethod] is the test method to use
   /// Example:
   /// ```dart
   /// CucumberDart.runFeatureFile('features/feature.feature', StepDefs());
   /// ```
-  static (int success, int failing) runFeatureFile(
-    File featureFile,
-    stepDefsInstance,
-    Function testMethod,
-  ) {
-    Feature feature = _readFeatureFile(featureFile);
-    final stepDefs = reflect(stepDefsInstance);
-
+  (int success, int failing) runFeature(
+    Feature feature,
+    stepDefs,
+    Function testMethod, {
+    TestCodeBuilder? codeBuilder,
+  }) {
     // Parse the step definitions class to get all the invokable methods
     Map<String, MethodMirror> allMembers = _parseMembers(stepDefs);
-    
+
     int success = 0;
     int failing = 0;
     for (var scenario in feature.scenarios) {
@@ -129,6 +148,19 @@ class CucumberDart {
   }
 
   ///
+  /// Reads all feature files in a directory and returns a list of [Feature] objects
+  ///
+  List<Feature> readFeatureFiles(
+    FileSystem fileSystem,
+    List<FileSystemEntity> files,
+  ) {
+    return files.map((file) {
+      final featureFile = fileSystem.file(file.path);
+      return _readFeatureFile(featureFile);
+    }).toList();
+  }
+
+  ///
   /// Reads a feature file and returns a [Feature] object
   /// [featureFile] is the the feature file
   /// Example:
@@ -136,7 +168,7 @@ class CucumberDart {
   /// Feature feature = CucumberDart.readFeatureFile('features/feature.feature');
   /// ```
   ///
-  static Feature _readFeatureFile(File featureFile) {
+  Feature _readFeatureFile(File featureFile) {
     final featureLines = featureFile.readAsLinesSync();
     final feature = Feature.fromFeature(featureLines);
     return feature;
@@ -150,7 +182,7 @@ class CucumberDart {
   /// Map<String, MethodMirror> allMembers = CucumberDart.parseMembers(stepDefs);
   /// ```
   ///
-  static Map<String, MethodMirror> _parseMembers(InstanceMirror stepDefs) {
+  Map<String, MethodMirror> _parseMembers(InstanceMirror stepDefs) {
     final allMembers = <String, MethodMirror>{};
     for (final member in stepDefs.type.instanceMembers.values) {
       final metadata = member.metadata;
@@ -171,7 +203,7 @@ class CucumberDart {
   /// [stepDefs] is the instance of the class containing the step definitions
   /// [testMethod] is the test method to use
   ///
-  static bool _runScenario(
+  bool _runScenario(
     Scenario scenario,
     Map<String, MethodMirror> allMembers,
     InstanceMirror stepDefs,
@@ -182,6 +214,7 @@ class CucumberDart {
       testMethod(scenario.name, () {
         for (var step in scenario.steps) {
           _runStep(
+            scenario.name,
             step,
             allMembers,
             stepDefs,
@@ -197,11 +230,13 @@ class CucumberDart {
 
   ///
   /// Runs a single step
+  /// [scenarioName] is the name of the scenario
   /// [step] is the step to run
   /// [allMembers] is a map of all the methods
   /// [stepDefs] is the instance of the class containing the step definitions
   ///
-  static void _runStep(
+  void _runStep(
+    String scenarioName,
     String step,
     Map<String, MethodMirror> allMembers,
     InstanceMirror stepDefs,
@@ -210,11 +245,7 @@ class CucumberDart {
 
     for (var possibleStep in CucumberRegex.possibleSteps) {
       if (possibleStep.hasMatch(step)) {
-        final sanitizedStep = step
-            .replaceAll(CucumberRegex.string, '{string}')
-            .replaceAll(CucumberRegex.float, ' {float}')
-            .replaceAll(CucumberRegex.int, ' {int}')
-            .trim();
+        String sanitizedStep = sanytizeStep(step);
         final match = possibleStep.firstMatch(sanitizedStep);
         final method = allMembers[match!.group(1)!.trim()];
 
@@ -222,7 +253,7 @@ class CucumberDart {
           throw Exception('Not Step Definition found for: $step');
         }
 
-        List<dynamic> orderedArguments = _extractOrderedArguments(
+        List<dynamic> orderedArguments = extractOrderedArguments(
           sanitizedStep,
           step,
         );
@@ -232,12 +263,21 @@ class CucumberDart {
     }
   }
 
+  String sanytizeStep(String step) {
+    final sanitizedStep = step
+        .replaceAll(CucumberRegex.string, '{string}')
+        .replaceAll(CucumberRegex.float, ' {float}')
+        .replaceAll(CucumberRegex.int, ' {int}')
+        .trim();
+    return sanitizedStep;
+  }
+
   ///
   /// Extracts the ordered arguments from a step
   /// [sanitizedStep] is the step with the placeholders
   /// [step] is the step with the values
   ///
-  static List<dynamic> _extractOrderedArguments(
+  List<dynamic> extractOrderedArguments(
     String sanitizedStep,
     String step,
   ) {

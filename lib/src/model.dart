@@ -56,10 +56,20 @@ class Feature {
       if (CucumberRegex.scenario.hasMatch(line)) {
         currentScenario = Scenario(line.split(':')[1], []);
         scenarios.add(currentScenario);
-      } else if (currentScenario != null) {
+      } else if (currentScenario != null && line.trim().isNotEmpty) {
         currentScenario.steps.add(line);
       }
     }
     return Feature(name, scenarios);
   }
+}
+
+class StepMethod {
+  final String stepName;
+  final String methodName;
+
+  StepMethod(
+    this.stepName,
+    this.methodName,
+  );
 }

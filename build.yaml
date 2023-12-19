@@ -1,0 +1,12 @@
+builders:
+  step_definition_builder:
+    import: 'package:cucumber_dart/builder.dart'
+    builder_factories: ['stepDefinitionBuilder']
+    build_extensions: { '.dart': ['.dart.g.dart'] }
+    auto_apply: dependents
+    build_to: source
+    defaults:
+      generate_for:
+        # Only apply to .dart files in the lib directory
+        include:
+        - test/**
