@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Dart",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "build_runner",
+            "type": "dart",
+            "request": "launch",
+            "program": ".dart_tool/build/entrypoint/build.dart",
+            "args": [
+                "build",
+                "--delete-conflicting-outputs"
+            ],
+            "cwd": "${workspaceFolder}/example/flutter_example/"
+        }
+    ]
+}

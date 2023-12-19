@@ -61,7 +61,7 @@ class ExampleStepDefinitions {
   }
 
   /// ---- CALCULATOR
-  
+
   @Given("I have entered {float} into the calculator")
   void iHaveEnteredIntIntoTheCalculator(double number) {
     calculatorInput = number;
@@ -83,7 +83,7 @@ class ExampleStepDefinitions {
   }
 
   /// ---- STRINGS
-  
+
   @Given("two strings {string} and {string}")
   void iHaveTwoStringsAnd(String string1, String string2) {
     strings = [string1, string2];
@@ -100,7 +100,7 @@ class ExampleStepDefinitions {
   }
 
   /// ---- YES BUT
-  
+
   @Given("the weather is cold")
   void theWeatherIsCold() {}
 
@@ -121,7 +121,4 @@ class ExampleStepDefinitions {
 
   @But("I will not get sunburned")
   void iWillNotGetSunburned() {}
-
-  
 }
-

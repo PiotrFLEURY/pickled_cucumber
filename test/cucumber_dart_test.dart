@@ -56,7 +56,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart.runFeatures(
+      final (int, int) report = CucumberDart().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -87,7 +87,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart.runFeatures(
+      final (int, int) report = CucumberDart().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -126,7 +126,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart.runFeatures(
+      final (int, int) report = CucumberDart().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -162,7 +162,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart.runFeatures(
+      final (int, int) report = CucumberDart().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
