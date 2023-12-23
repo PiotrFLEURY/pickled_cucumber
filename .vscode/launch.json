@@ -16,7 +16,7 @@
                 "build",
                 "--delete-conflicting-outputs"
             ],
-            "cwd": "${workspaceFolder}/example/flutter_example/"
+            "cwd": "${workspaceFolder}/flutter_example/"
         }
     ]
 }

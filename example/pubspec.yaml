@@ -1,0 +1,12 @@
+name: dart_example
+description: A cucumber example in Dart.
+version: 1.0.0
+repository:
+publish_to: none
+
+environment:
+  sdk: ^3.2.0
+
+dependencies:
+  cucumber_dart: 
+    path: ../

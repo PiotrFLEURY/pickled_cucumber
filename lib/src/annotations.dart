@@ -46,8 +46,6 @@ class But extends GherkinAnnotation {
 /// StepDefinition annotation.
 /// Used to mark a class as a step definition.
 class StepDefinition {
-  final Type type;
-
   /// Creates a new instance of [StepDefinition].
-  const StepDefinition(this.type);
+  const StepDefinition();
 }

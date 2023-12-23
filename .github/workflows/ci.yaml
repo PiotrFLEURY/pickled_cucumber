@@ -1,0 +1,56 @@
+name: cucumber_dart CI
+on: push
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    lib-test:
+        name: Run library tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: dart-lang/setup-dart@v1
+
+            - run: |
+                dart pub get
+                dart format --set-exit-if-changed .
+                dart analyze
+                dart test
+    dart-example:
+        needs: lib-test
+        name: Run dart example
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v3
+            - uses: dart-lang/setup-dart@v1
+            
+            - name: Run dart example tests
+              working-directory: example
+              run: |
+                dart pub get
+                dart format --set-exit-if-changed .
+                dart analyze
+                dart test
+    flutter-example:
+        needs: dart-example
+        name: Run flutter example
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v3
+            - uses: subosito/flutter-action@v2
+              with:
+                cache: true
+            
+            - name: Run flutter example tests
+              working-directory: flutter_example
+              run: |
+                flutter pub get
+                dart run build_runner build --delete-conflicting-outputs
+                dart format --set-exit-if-changed .
+                flutter analyze
+                flutter test
+
