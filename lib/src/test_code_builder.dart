@@ -51,7 +51,6 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                   ..body = Block.of(
                                     scenario.steps.map(
                                       (step) {
-                                        print('building step $step');
                                         StepMethod stepMethod =
                                             stepMethods.firstWhere(
                                           (method) => methodApplyTo(
@@ -110,22 +109,17 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     final stepMethods = <StepMethod>[];
     lib.allElements
         .whereType<ClassElement>()
-        .first // FIXME: manage all classes
+        .first // should manage all classes
         .methods
         .forEach((methodElement) {
-      print('method ${methodElement.displayName}');
       for (var meta in methodElement.metadata) {
-        print('metadata ${meta.computeConstantValue()}');
         // get the value of the annotation
         final value = meta.computeConstantValue();
-        print('value $value');
         final superValue = value?.getField('(super)');
         if (superValue?.type?.getDisplayString(withNullability: false) ==
             'GherkinAnnotation') {
-          print('found Gherkin annotation');
           final annotationValue =
               superValue?.getField('value')?.toStringValue();
-          print('annotationValue $annotationValue');
           if (annotationValue != null) {
             final annotationName = value?.type?.getDisplayString(
               withNullability: false,
@@ -156,11 +150,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     CucumberDart cucumberDart,
   ) {
     final sanitizedStep = cucumberDart.sanytizeStep(step);
-    bool apply = method.stepName == sanitizedStep;
-    if (!apply) {
-      print('method ${method.stepName} does not apply to $sanitizedStep');
-    }
-    return apply;
+    return method.stepName == sanitizedStep;
   }
 
   List<Expression> orderedArguments(

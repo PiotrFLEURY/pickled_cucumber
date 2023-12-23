@@ -38,7 +38,7 @@ dependencies:
 
 dev_dependencies:
   cucumber_dart:
-    path: ../../
+    path: ../
   flutter_test:
     sdk: flutter
 

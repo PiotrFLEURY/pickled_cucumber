@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-@StepDefinition(CounterSteps)
+@StepDefinition()
 class CounterSteps {
   @Given('counter is {int}')
   Future<void> counterIs(WidgetTester tester, int counter) async {
@@ -34,6 +34,19 @@ class CounterSteps {
 
     await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
+  }
+
+  @When('I increment counter {int} times')
+  Future<void> iIncrementCounterTimes(
+    WidgetTester tester,
+    int times,
+  ) async {
+    debugPrint('I increment counter twice');
+
+    for (var i = 0; i < times; i++) {
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+    }
   }
 
   @Then('counter should be {int}')

@@ -10,3 +10,8 @@ Feature: counter
       Given counter is 0
       When I increment counter twice
       Then counter should be 2
+
+    Scenario: increment counter ten times
+      Given counter is 0
+      When I increment counter 10 times
+      Then counter should be 10
