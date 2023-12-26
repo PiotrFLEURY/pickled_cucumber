@@ -77,6 +77,79 @@ Run your tests
 dart test test/cucumber_test.dart
 ```
 
+### Dart Frog usage
+
+Cucumber Dart works the exact same way as Dart with Dart Frog.
+
+Write your first feature file in any directory
+
+```gherkin
+# test/features/index.feature
+Feature: index
+
+    Scenario: GET index route
+        Given my app is running
+        When I visit the index route
+        Then I should see "Welcome to Dart Frog!"
+        And receive a 200 status code
+```
+
+Create your Dart Frog step definitions file
+
+```dart
+// test/step_definitions.dart
+import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:dart_frog/dart_frog.dart';
+import 'package:mocktail/mocktail.dart' as mocktail;
+import 'package:test/test.dart';
+import '../routes/index.dart' as route;
+
+class MockRequestContext extends mocktail.Mock implements RequestContext {}
+
+class DartFrogStepDefinition {
+  late MockRequestContext context;
+  Response? response;
+
+  @Given('my app is running')
+  void myAppIsRunning() {
+    context = MockRequestContext();
+  }
+
+  @When('I visit the index route')
+  void iVisitTheIndexRoute() {
+    response = route.onRequest(context);
+  }
+
+  @Then('I should see {string}')
+  Future<void> iShouldSee(String string) async {
+    expect(response!.body(), completion(equals(string)));
+  }
+
+  @And('receive a {int} status code')
+  void receiveStatusCode(int statusCode) {
+    expect(response!.statusCode, equals(statusCode));
+  }
+}
+
+```
+
+Create your entry point in `test` directory
+
+```dart
+// test/cucumber_test.dart
+import 'package:cucumber_dart/cucumber_dart.dart';
+
+import 'step_definitions.dart';
+
+void main() {
+  CucumberDart().runFeatures(
+    'test/features/',
+    DartFrogStepDefinition(),
+  );
+}
+
+```
+
 ### Flutter usage
 
 Cucumber Dart works with code generation for Flutter projects.

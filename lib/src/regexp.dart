@@ -56,7 +56,7 @@ class CucumberRegex {
   /// ```gherkin
   /// Given I have "42" cukes
   /// ```
-  static final string = RegExp(r'\"([\w.-]*)\"');
+  static final string = RegExp(r'\"([^"]*)\"');
 
   /// Int argument RegExp
   /// Example:

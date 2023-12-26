@@ -34,6 +34,23 @@ jobs:
                 dart format --set-exit-if-changed .
                 dart analyze
                 dart test
+    dart-frog-example:
+        needs: dart-example
+        name: Run dart frog example
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - uses: dart-lang/setup-dart@v1
+
+            - name: Run dart frog example tests
+              working-directory: dart_frog_example
+              run: |
+                dart pub global activate dart_frog_cli
+                dart pub get
+                dart format --set-exit-if-changed .
+                dart analyze
+                dart test
     flutter-example:
         needs: dart-example
         name: Run flutter example
