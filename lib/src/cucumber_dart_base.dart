@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:mirrors';
 
 import 'package:cucumber_dart/cucumber_dart.dart';
@@ -282,20 +283,61 @@ class CucumberDart {
     String step,
   ) {
     final sanitizedStepWords = sanitizedStep.trim().split(' ');
-    final stepWords = step.trim().split(' ');
     final orderedArguments = [];
+
+    final stringMatches = CucumberRegex.string.allMatches(step);
+    final floatMatches = CucumberRegex.float.allMatches(
+      step.replaceAll(
+        CucumberRegex.string,
+        '',
+      ),
+    );
+    final intMatches = CucumberRegex.int.allMatches(
+      step
+          .replaceAll(
+            CucumberRegex.string,
+            '',
+          )
+          .replaceAll(
+            CucumberRegex.float,
+            '',
+          ),
+    );
+
+    final stringLifo = Queue.from(
+      stringMatches.map(
+        (e) => e.group(1)!.replaceAll(
+              '"',
+              '',
+            ),
+      ),
+    );
+    final floatLifo = Queue.from(
+      floatMatches.map(
+        (e) => double.parse(
+          e.group(1)!,
+        ),
+      ),
+    );
+    final intLifo = Queue.from(
+      intMatches.map(
+        (e) => int.parse(
+          e.group(1)!,
+        ),
+      ),
+    );
 
     for (var i = 0; i < sanitizedStepWords.length; i++) {
       final sanitizedStepWord = sanitizedStepWords[i];
       switch (sanitizedStepWord) {
         case '{string}':
-          orderedArguments.add(stepWords[i].replaceAll('"', ''));
+          orderedArguments.add(stringLifo.removeFirst());
           break;
         case '{int}':
-          orderedArguments.add(int.parse(stepWords[i]));
+          orderedArguments.add(intLifo.removeFirst());
           break;
         case '{float}':
-          orderedArguments.add(double.parse(stepWords[i]));
+          orderedArguments.add(floatLifo.removeFirst());
           break;
       }
     }

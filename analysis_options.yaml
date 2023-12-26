@@ -21,6 +21,7 @@ include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
+    - dart_frog_example/**
     - example/**
     - flutter_example/**
 

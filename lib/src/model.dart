@@ -57,7 +57,7 @@ class Feature {
         currentScenario = Scenario(line.split(':')[1], []);
         scenarios.add(currentScenario);
       } else if (currentScenario != null && line.trim().isNotEmpty) {
-        currentScenario.steps.add(line);
+        currentScenario.steps.add(line.trim());
       }
     }
     return Feature(name, scenarios);
