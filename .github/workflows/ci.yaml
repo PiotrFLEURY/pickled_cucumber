@@ -10,7 +10,7 @@ jobs:
         name: Run library tests
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: dart-lang/setup-dart@v1
 
             - run: |
@@ -24,7 +24,7 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: dart-lang/setup-dart@v1
             
             - name: Run dart example tests
@@ -40,7 +40,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: dart-lang/setup-dart@v1
 
             - name: Run dart frog example tests
@@ -57,7 +57,7 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: subosito/flutter-action@v2
               with:
                 cache: true
