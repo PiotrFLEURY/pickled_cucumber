@@ -2,6 +2,7 @@ import 'package:cucumber_dart/cucumber_dart.dart';
 import 'package:file/memory.dart';
 import 'package:test/test.dart';
 
+@StepDefinition()
 class TestStepDefinitions {
   @Given("I have {int} {string} in my {string}")
   void iHaveCukesInMyBelly(int cukes, String belly, String string) {
@@ -28,6 +29,16 @@ class TestStepDefinitions {
   void iCallUnIneplementedStep() {
     throw UnimplementedError();
   }
+
+  @But("I have {float} {string} in my {string}")
+  void iHaveCukesInMyBellyFloat(
+    double cukes,
+    String belly,
+    String string,
+  ) {
+    print('Cukes: $cukes');
+    print('Belly: $belly');
+  }
 }
 
 /// The tests files does not contains any `test`function because the purpose
@@ -47,6 +58,7 @@ void main() {
           When I wait 1 hour
           Then my belly should growl
           And I should have indigestion
+          But I have 42.0 "cukes" in my "belly"
       ''';
 
       testFileSystem.directory('example/features').createSync(recursive: true);

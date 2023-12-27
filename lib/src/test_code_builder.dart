@@ -8,7 +8,7 @@ import 'package:file/local.dart';
 import 'package:source_gen/source_gen.dart';
 
 class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
-  String _buildCode(
+  String buildCode(
     List<Feature> features,
     List<StepMethod> stepMethods,
     String stepDefsUri,
@@ -135,7 +135,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
       }
     });
 
-    return _buildCode(
+    return buildCode(
       features,
       stepMethods,
       classElement.librarySource.uri.pathSegments.last,

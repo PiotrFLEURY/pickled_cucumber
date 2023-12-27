@@ -54,7 +54,8 @@ class Feature {
 
     for (var line in featureLines.skip(1)) {
       if (CucumberRegex.scenario.hasMatch(line)) {
-        currentScenario = Scenario(line.split(':')[1], []);
+        final scenarioName = line.split(':')[1].trim();
+        currentScenario = Scenario(scenarioName, []);
         scenarios.add(currentScenario);
       } else if (currentScenario != null && line.trim().isNotEmpty) {
         currentScenario.steps.add(line.trim());
