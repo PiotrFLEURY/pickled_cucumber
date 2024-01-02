@@ -1,11 +1,11 @@
-import 'package:cucumber_dart/cucumber_dart.dart';
-import 'package:cucumber_dart/src/model.dart';
-import 'package:cucumber_dart/src/test_code_builder.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
+import 'package:pickled_cucumber/src/model.dart';
+import 'package:pickled_cucumber/src/test_code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final cucumberDart = CucumberDart();
+  final pickledCucumber = PickledCucumber();
   final codeBuilder = TestCodeBuilder();
 
   group('buildCode', () {
@@ -43,7 +43,7 @@ void main() {
         stepMethods,
         stepDefsUri,
         stepDefsClassName,
-        cucumberDart,
+        pickledCucumber,
       );
 
       // Then
@@ -88,7 +88,7 @@ runFeatures() {
       final step = 'Given my name is "Piotr"';
 
       // When
-      final result = codeBuilder.methodApplyTo(method, step, cucumberDart);
+      final result = codeBuilder.methodApplyTo(method, step, pickledCucumber);
 
       // Then
       expect(result, true);
@@ -101,7 +101,7 @@ runFeatures() {
       final step = 'Given my name is not "Piotr"';
 
       // When
-      final result = codeBuilder.methodApplyTo(method, step, cucumberDart);
+      final result = codeBuilder.methodApplyTo(method, step, pickledCucumber);
 
       // Then
       expect(result, false);

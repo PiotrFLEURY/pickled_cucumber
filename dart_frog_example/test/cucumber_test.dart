@@ -1,9 +1,9 @@
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 
 import 'step_definitions.dart';
 
 void main() {
-  CucumberDart().runFeatures(
+  PickledCucumber().runFeatures(
     'test/features/',
     DartFrogStepDefinition(),
   );

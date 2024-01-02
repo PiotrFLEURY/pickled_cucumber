@@ -1,4 +1,4 @@
-import 'package:cucumber_dart/src/model.dart';
+import 'package:pickled_cucumber/src/model.dart';
 import 'package:test/test.dart';
 
 void main() {

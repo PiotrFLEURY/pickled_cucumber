@@ -1,7 +1,7 @@
-# Contributing to cucumber_dart 🎨
+# Contributing to pickled_cucumber 🎨
 
 Thanks for opening the CONTRIBUTING file.
-cucumber_dart is open source and will continue to be.
+pickled_cucumber is open source and will continue to be.
 If you want to make a suggestion, open an issue of propose a change, please read the following lines.
 
 ## Code of conduct 👥
@@ -10,9 +10,9 @@ Before posting anything on this repository, please read the [CODE_OF_CONDUCT.md]
 
 ## Open an issue 📝
 
-For any suggestion, issue or question, please fill an issue 
+For any suggestion, issue or question, please fill an issue
 
-[https://github.com/PiotrFLEURY/cucumber_dart/issues/new/choose](https://github.com/PiotrFLEURY/cucumber_dart/issues/new/choose)
+[https://github.com/PiotrFLEURY/pickled_cucumber/issues/new/choose](https://github.com/PiotrFLEURY/pickled_cucumber/issues/new/choose)
 
 Please provide the more context as possible in order to plainly understand your purpose and being able to address it.
 

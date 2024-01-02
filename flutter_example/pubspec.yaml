@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  cucumber_dart:
+  pickled_cucumber:
     path: ../
   flutter_test:
     sdk: flutter

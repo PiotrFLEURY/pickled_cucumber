@@ -14,7 +14,7 @@ runFeatures() {
     'counter',
     () {
       testWidgets(
-        ' increment counter',
+        'increment counter',
         (WidgetTester widgetTester) async {
           await steps.counterIs(
             widgetTester,
@@ -28,7 +28,7 @@ runFeatures() {
         },
       );
       testWidgets(
-        ' increment counter twice',
+        'increment counter twice',
         (WidgetTester widgetTester) async {
           await steps.counterIs(
             widgetTester,
@@ -42,7 +42,7 @@ runFeatures() {
         },
       );
       testWidgets(
-        ' increment counter ten times',
+        'increment counter ten times',
         (WidgetTester widgetTester) async {
           await steps.counterIs(
             widgetTester,

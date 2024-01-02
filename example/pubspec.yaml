@@ -8,5 +8,5 @@ environment:
   sdk: ^3.2.0
 
 dependencies:
-  cucumber_dart: 
+  pickled_cucumber: 
     path: ../

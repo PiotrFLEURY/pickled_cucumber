@@ -1,6 +1,6 @@
 builders:
   step_definition_builder:
-    import: 'package:cucumber_dart/builder.dart'
+    import: 'package:pickled_cucumber/builder.dart'
     builder_factories: ['stepDefinitionBuilder']
     build_extensions: { '.dart': ['.dart.g.dart'] }
     auto_apply: dependents

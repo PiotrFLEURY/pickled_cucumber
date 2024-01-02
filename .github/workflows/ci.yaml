@@ -1,4 +1,4 @@
-name: cucumber_dart CI
+name: pickled_cucumber CI
 on: push
 
 concurrency:

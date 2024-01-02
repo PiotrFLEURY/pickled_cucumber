@@ -1,8 +1,8 @@
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final cucumberDart = CucumberDart();
+  final pickledCucumber = PickledCucumber();
   group('extractOrderedArguments', () {
     group('string', () {
       test('single', () {
@@ -12,7 +12,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, ['Friday']);
@@ -25,7 +25,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, ['Friday', 'Saturday']);
@@ -40,7 +40,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3.14]);
@@ -54,7 +54,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3.14, 2.72]);
@@ -69,7 +69,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3]);
@@ -83,7 +83,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3, 4]);
@@ -99,7 +99,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3, 4.2]);
@@ -113,7 +113,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3, '4']);
@@ -127,7 +127,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3, 4.2]);
@@ -142,7 +142,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, [3, 4.2, '5']);
@@ -157,7 +157,7 @@ void main() {
 
         // When
         final arguments =
-            cucumberDart.extractOrderedArguments(sanitizedStep, step);
+            pickledCucumber.extractOrderedArguments(sanitizedStep, step);
 
         // Then
         expect(arguments, ['Piotr', 'FLEURY', 37, 1.79]);

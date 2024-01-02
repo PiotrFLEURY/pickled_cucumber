@@ -1,8 +1,7 @@
-name: cucumber_dart
+name: pickled_cucumber
 description: A cucumber implementation for Dart.
 version: 1.0.0
-repository: https://github.com/PiotrFLEURY/cucumber_dart
-publish_to: none
+repository: https://github.com/PiotrFLEURY/pickled_cucumber
 
 environment:
   sdk: ^3.2.0
