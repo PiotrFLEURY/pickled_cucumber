@@ -1,6 +1,26 @@
-# Cucumber Dart
+# 🥒 Cucumber Dart 🎯
 
 A simple Dart engine for Cucumber scenarios.
+
+Works with **[🎯 Dart](#dart-usage)**, **[🐸 Dart Frog](#dart-frog-usage)** and **[🐦 Flutter](#flutter-usage)** projects.
+
+> **ℹ️ Note:**
+>
+> This is non official package, not affiliated with the Cucumber nor the Dart project.
+>
+> The goal of this project is to provide a simple way to run Cucumber scenarios in Dart and Flutter projects.
+>
+> This project does not aim to be a full Cucumber implementation. It only supports the most common features of Cucumber.
+
+## Table of contents
+
+- [🥒 Cucumber Dart 🎯](#-cucumber-dart-)
+  - [Table of contents](#table-of-contents)
+  - [Getting started](#getting-started)
+    - [🎯 Dart usage](#dart-usage)
+    - [🐸 Dart Frog usage](#dart-frog-usage)
+    - [🐦 Flutter usage](#flutter-usage)
+  - [Links](#links)
 
 ## Getting started
 
@@ -152,6 +172,8 @@ void main() {
 
 ### Flutter usage
 
+With Cucumber Dart, you can [Flutter integration tests](https://docs.flutter.dev/cookbook/testing/integration/introduction) and [Widget tests](https://docs.flutter.dev/cookbook/testing/widget/introduction) using Cucumber scenarios.
+
 Cucumber Dart works with code generation for Flutter projects.
 
 Please add `build_runner` dependency to your project
@@ -262,3 +284,10 @@ Run your tests
 ```bash
 flutter test integration_test/app_test.dart
 ```
+
+## Links
+
+- [Learn Cucumber](https://cucumber.io/docs/guides/overview/)
+- [Learn Dart](https://dart.dev/guides)
+- [Learn Dart Frog](https://dartfrog.vgv.dev/)
+- [Learn Flutter](https://flutter.dev/docs)
