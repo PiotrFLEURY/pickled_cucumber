@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:cucumber_dart/cucumber_dart.dart';
-import 'package:cucumber_dart/src/model.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
+import 'package:pickled_cucumber/src/model.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:file/local.dart';
 import 'package:source_gen/source_gen.dart';
@@ -13,7 +13,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     List<StepMethod> stepMethods,
     String stepDefsUri,
     String stepDefsClassName,
-    CucumberDart cucumberDart,
+    PickledCucumber pickledCucumber,
   ) {
     final library = Library(
       (b) => b
@@ -56,7 +56,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                           (method) => methodApplyTo(
                                             method,
                                             step,
-                                            cucumberDart,
+                                            pickledCucumber,
                                           ),
                                         );
                                         return refer(
@@ -65,7 +65,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                           [
                                             refer('widgetTester'),
                                             ...orderedArguments(
-                                              cucumberDart,
+                                              pickledCucumber,
                                               step,
                                             )
                                           ],
@@ -99,9 +99,9 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     final classElement = element as ClassElement;
     final lib = LibraryReader(await buildStep.inputLibrary);
 
-    final cucumberDart = CucumberDart();
+    final pickledCucumber = PickledCucumber();
 
-    final features = cucumberDart.parseFeatures(
+    final features = pickledCucumber.parseFeatures(
       LocalFileSystem(),
       'test/features/',
     );
@@ -128,7 +128,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
               features,
               "$annotationName $annotationValue",
               methodElement,
-              cucumberDart,
+              pickledCucumber,
             ));
           }
         }
@@ -140,26 +140,26 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
       stepMethods,
       classElement.librarySource.uri.pathSegments.last,
       element.displayName,
-      cucumberDart,
+      pickledCucumber,
     );
   }
 
   bool methodApplyTo(
     StepMethod method,
     String step,
-    CucumberDart cucumberDart,
+    PickledCucumber pickledCucumber,
   ) {
-    final sanitizedStep = cucumberDart.sanytizeStep(step);
+    final sanitizedStep = pickledCucumber.sanytizeStep(step);
     return method.stepName == sanitizedStep;
   }
 
   List<Expression> orderedArguments(
-    CucumberDart cucumberDart,
+    PickledCucumber pickledCucumber,
     String stepName,
   ) {
-    return cucumberDart
+    return pickledCucumber
         .extractOrderedArguments(
-      cucumberDart.sanytizeStep(stepName),
+      pickledCucumber.sanytizeStep(stepName),
       stepName,
     )
         .map((arg) {
@@ -179,7 +179,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     List<Feature> features,
     String stepName,
     MethodElement methodElement,
-    CucumberDart cucumberDart,
+    PickledCucumber pickledCucumber,
   ) {
     final methodName = methodElement.displayName;
 

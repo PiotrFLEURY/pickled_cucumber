@@ -1,4 +1,4 @@
-# 🥒 Cucumber Dart 🎯
+# 🥒 Pickled cucumber 🥒
 
 A simple Dart engine for Cucumber scenarios.
 
@@ -6,7 +6,7 @@ Works with **[🎯 Dart](#dart-usage)**, **[🐸 Dart Frog](#dart-frog-usage)** 
 
 > **ℹ️ Note:**
 >
-> This is non official package, not affiliated with the Cucumber nor the Dart project.
+> This is a non official package, not affiliated with the Cucumber nor the Dart project.
 >
 > The goal of this project is to provide a simple way to run Cucumber scenarios in Dart and Flutter projects.
 >
@@ -14,22 +14,29 @@ Works with **[🎯 Dart](#dart-usage)**, **[🐸 Dart Frog](#dart-frog-usage)** 
 
 ## Table of contents
 
-- [🥒 Cucumber Dart 🎯](#-cucumber-dart-)
+- [🥒 Pickled cucumber 🎯](#-pickled-cucumber-)
   - [Table of contents](#table-of-contents)
   - [Getting started](#getting-started)
     - [🎯 Dart usage](#dart-usage)
     - [🐸 Dart Frog usage](#dart-frog-usage)
     - [🐦 Flutter usage](#flutter-usage)
+      - [Run your tests as Widget tests](#run-your-tests-as-widget-tests)
+      - [Run your tests as Integration tests](#run-your-tests-as-integration-tests)
   - [Links](#links)
 
 ## Getting started
 
 Add it to your `pubspec.yaml`:
 
+```bash
+dart pub add pickled_cucumber
+```
+
+or add it manually:
+
 ```yaml
 dependencies:
-  cucumber_dart: 
-    git: https://github.com/PiotrFLEURY/cucumber_dart.git
+  pickled_cucumber: ^1.0.0 # use the latest version
 ```
 
 ## Usage
@@ -78,13 +85,13 @@ Create your entry point in `test` directory
 
 ```dart
 // test/cucumber_test.dart
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:counter/features/step_definitions/counter_steps.dart';
 
 void main() {
     final stepDefsDartFile = CounterStepDefs();
 
-    CucumberDart.runFeatures(
+    PickledCucumber.runFeatures(
         "features/counter.feature",
         stepDefsDartFile,
     );
@@ -99,7 +106,7 @@ dart test test/cucumber_test.dart
 
 ### Dart Frog usage
 
-Cucumber Dart works the exact same way as Dart with Dart Frog.
+Pickled cucumber works the exact same way as Dart with Dart Frog.
 
 Write your first feature file in any directory
 
@@ -118,7 +125,7 @@ Create your Dart Frog step definitions file
 
 ```dart
 // test/step_definitions.dart
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:mocktail/mocktail.dart' as mocktail;
 import 'package:test/test.dart';
@@ -157,12 +164,12 @@ Create your entry point in `test` directory
 
 ```dart
 // test/cucumber_test.dart
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 
 import 'step_definitions.dart';
 
 void main() {
-  CucumberDart().runFeatures(
+  PickledCucumber().runFeatures(
     'test/features/',
     DartFrogStepDefinition(),
   );
@@ -172,9 +179,9 @@ void main() {
 
 ### Flutter usage
 
-With Cucumber Dart, you can [Flutter integration tests](https://docs.flutter.dev/cookbook/testing/integration/introduction) and [Widget tests](https://docs.flutter.dev/cookbook/testing/widget/introduction) using Cucumber scenarios.
+With Pickled cucumber, you can make [Flutter integration tests](https://docs.flutter.dev/cookbook/testing/integration/introduction) and [Widget tests](https://docs.flutter.dev/cookbook/testing/widget/introduction) using Cucumber scenarios.
 
-Cucumber Dart works with code generation for Flutter projects.
+Pickled cucumber works with code generation for Flutter projects.
 
 Please add `build_runner` dependency to your project
 
@@ -204,13 +211,14 @@ Create your Dart step definitions file in `test/` directory
 // test/counter_steps.dart
 
 // IMPORTANT: ⚠️ only import annotations ⚠️
-import 'package:cucumber_dart/src/annotations.dart';
+import 'package:pickled_cucumber/src/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 @StepDefinition()
 class CounterSteps {
+
   @Given('counter is {int}')
   Future<void> counterIs(WidgetTester tester, int counter) async {
     debugPrint('counter is $counter');
@@ -242,7 +250,7 @@ class CounterSteps {
 Run `build_runner` to generate the step definitions file
 
 ```bash
-flutter pub run build_runner build
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 Create your entry point in `test` directory
@@ -254,7 +262,7 @@ import 'counter_steps.g.dart';
 main() => runFeatures();
 ```
 
-Run your tests as Widget tests
+#### Run your tests as Widget tests
 
 ```bash
 flutter test test/cucumber_test.dart
@@ -262,7 +270,7 @@ flutter test test/cucumber_test.dart
 flutter test
 ```
 
-Run your tests as Integration tests
+#### Run your tests as Integration tests
 
 Create your entry point in `integration_test` directory
 

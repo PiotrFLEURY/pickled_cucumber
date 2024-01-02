@@ -1,4 +1,4 @@
-import 'package:cucumber_dart/src/regexp.dart';
+import 'package:pickled_cucumber/src/regexp.dart';
 import 'package:test/test.dart';
 
 void main() {

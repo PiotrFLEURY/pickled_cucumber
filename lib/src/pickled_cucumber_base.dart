@@ -1,10 +1,10 @@
 import 'dart:collection';
 import 'dart:mirrors';
 
-import 'package:cucumber_dart/cucumber_dart.dart';
-import 'package:cucumber_dart/src/model.dart';
-import 'package:cucumber_dart/src/regexp.dart';
-import 'package:cucumber_dart/src/test_code_builder.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
+import 'package:pickled_cucumber/src/model.dart';
+import 'package:pickled_cucumber/src/regexp.dart';
+import 'package:pickled_cucumber/src/test_code_builder.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:test/test.dart';
@@ -15,7 +15,7 @@ import 'package:test/test.dart';
 /// Example:
 ///
 /// ```dart
-/// import 'package:cucumber_dart/cucumber_dart.dart';
+/// import 'package:pickled_cucumber/pickled_cucumber.dart';
 ///
 /// class StepDefs {
 ///
@@ -43,7 +43,7 @@ import 'package:test/test.dart';
 /// }
 ///
 /// void main() {
-///   CucumberDart.runFeatures('features', StepDefs());
+///   PickledCucumber.runFeatures('features', StepDefs());
 /// }
 ///
 /// ```
@@ -56,7 +56,7 @@ import 'package:test/test.dart';
 ///     And I should have indigestion
 ///
 /// ```
-class CucumberDart {
+class PickledCucumber {
   ///
   /// Runs all feature files in a directory
   /// [featureDirectoryPath] is the path to the directory containing the feature files
@@ -65,7 +65,7 @@ class CucumberDart {
   /// [testMethod] is the test method to use
   /// Example:
   /// ```dart
-  /// CucumberDart.runFeatures('features', StepDefs());
+  /// PickledCucumber.runFeatures('features', StepDefs());
   /// ```
   ///
   (int success, int failing) runFeatures(
@@ -119,7 +119,7 @@ class CucumberDart {
   /// [testMethod] is the test method to use
   /// Example:
   /// ```dart
-  /// CucumberDart.runFeatureFile('features/feature.feature', StepDefs());
+  /// PickledCucumber.runFeatureFile('features/feature.feature', StepDefs());
   /// ```
   (int success, int failing) runFeature(
     Feature feature,
@@ -166,7 +166,7 @@ class CucumberDart {
   /// [featureFile] is the the feature file
   /// Example:
   /// ```dart
-  /// Feature feature = CucumberDart.readFeatureFile('features/feature.feature');
+  /// Feature feature = PickledCucumber.readFeatureFile('features/feature.feature');
   /// ```
   ///
   Feature _readFeatureFile(File featureFile) {
@@ -180,7 +180,7 @@ class CucumberDart {
   /// [stepDefs] is the instance of the class containing the step definitions
   /// Example:
   /// ```dart
-  /// Map<String, MethodMirror> allMembers = CucumberDart.parseMembers(stepDefs);
+  /// Map<String, MethodMirror> allMembers = PickledCucumber.parseMembers(stepDefs);
   /// ```
   ///
   Map<String, MethodMirror> _parseMembers(InstanceMirror stepDefs) {

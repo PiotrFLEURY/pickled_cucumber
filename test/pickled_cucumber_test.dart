@@ -1,4 +1,4 @@
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:file/memory.dart';
 import 'package:test/test.dart';
 
@@ -68,7 +68,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart().runFeatures(
+      final (int, int) report = PickledCucumber().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -99,7 +99,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart().runFeatures(
+      final (int, int) report = PickledCucumber().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -138,7 +138,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart().runFeatures(
+      final (int, int) report = PickledCucumber().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,
@@ -174,7 +174,7 @@ void main() {
         ..createSync(recursive: true);
 
       // WHEN
-      final (int, int) report = CucumberDart().runFeatures(
+      final (int, int) report = PickledCucumber().runFeatures(
         'example/features/',
         TestStepDefinitions(),
         fileSystem: testFileSystem,

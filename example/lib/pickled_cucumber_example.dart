@@ -1,4 +1,4 @@
-import 'package:cucumber_dart/cucumber_dart.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:test/test.dart';
 
 class ExampleStepDefinitions {

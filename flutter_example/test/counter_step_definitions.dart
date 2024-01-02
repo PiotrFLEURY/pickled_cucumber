@@ -1,4 +1,4 @@
-import 'package:cucumber_dart/src/annotations.dart';
+import 'package:pickled_cucumber/src/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
