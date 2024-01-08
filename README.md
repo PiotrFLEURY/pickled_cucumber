@@ -257,7 +257,7 @@ Create your entry point in `test` directory
 
 ```dart
 // test/cucumber_test.dart
-import 'counter_steps.g.dart';
+import 'counter_steps.pickled.dart';
 
 main() => runFeatures();
 ```
