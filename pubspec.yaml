@@ -1,5 +1,5 @@
 name: pickled_cucumber
-description: A cucumber implementation for Dart.
+description: A simple cucumber implementation for Dart, Dart Frog and Flutter.
 version: 1.0.1
 repository: https://github.com/PiotrFLEURY/pickled_cucumber
 
