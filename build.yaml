@@ -2,7 +2,7 @@ builders:
   step_definition_builder:
     import: 'package:pickled_cucumber/builder.dart'
     builder_factories: ['stepDefinitionBuilder']
-    build_extensions: { '.dart': ['.dart.g.dart'] }
+    build_extensions: { '.dart': ['.dart.pickled.dart'] }
     auto_apply: dependents
     build_to: source
     defaults:

@@ -1,3 +1,3 @@
-import 'counter_step_definitions.g.dart';
+import 'counter_step_definitions.pickled.dart';
 
 main() => runFeatures();

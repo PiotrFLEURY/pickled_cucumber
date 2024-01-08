@@ -4,5 +4,5 @@ import 'package:source_gen/source_gen.dart';
 
 Builder stepDefinitionBuilder(BuilderOptions options) => LibraryBuilder(
       TestCodeBuilder(),
-      generatedExtension: '.g.dart',
+      generatedExtension: '.pickled.dart',
     );
