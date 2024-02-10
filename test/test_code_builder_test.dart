@@ -154,4 +154,73 @@ runFeatures() {
       expect(result, false);
     });
   });
+
+  group('featuresInSteps', () {
+    test('should filter features not defined in step methods', () {
+      // Given
+      final features = [
+        Feature(
+          'My feature',
+          [
+            Scenario(
+              'My scenario',
+              [
+                'Given I have a step',
+                'When I do womething',
+                'Then I should get a result',
+              ],
+            ),
+          ],
+        ),
+        Feature(
+          'My other feature',
+          [
+            Scenario(
+              'My other scenario',
+              [
+                'Given I have another step',
+                'When I do something else',
+                'Then I should get another result',
+              ],
+            ),
+          ],
+        ),
+      ];
+      final stepMethods = [
+        StepMethod('Given I have a step', "iHaveAStep"),
+        StepMethod('When I do womething', "iDoSomething"),
+        StepMethod('Then I should get a result', "iShouldGetAResult"),
+      ];
+
+      // When
+      final result = codeBuilder.featuresInSteps(features, stepMethods);
+
+      // Then
+      final expectedFeature = Feature(
+        'My feature',
+        [
+          Scenario(
+            'My scenario',
+            [
+              'Given I have a step',
+              'When I do womething',
+              'Then I should get a result',
+            ],
+          ),
+        ],
+      );
+      expect(result.length, 1);
+      expect(result[0].name, expectedFeature.name);
+      expect(result[0].scenarios.length, expectedFeature.scenarios.length);
+      for (var i = 0; i < result[0].scenarios.length; i++) {
+        expect(result[0].scenarios[i].name, expectedFeature.scenarios[i].name);
+        expect(result[0].scenarios[i].steps.length,
+            expectedFeature.scenarios[i].steps.length);
+        for (var j = 0; j < result[0].scenarios[i].steps.length; j++) {
+          expect(result[0].scenarios[i].steps[j],
+              expectedFeature.scenarios[i].steps[j]);
+        }
+      }
+    });
+  });
 }

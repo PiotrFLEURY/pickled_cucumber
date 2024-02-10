@@ -11,3 +11,7 @@
 ## 1.0.2
 
 - [Flutter] Fix: error message on step not found
+
+## 1.0.3
+
+- [Flutter] Fix: multiple steps defintion files usage
