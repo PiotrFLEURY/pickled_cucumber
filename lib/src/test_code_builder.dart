@@ -58,6 +58,9 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                             step,
                                             pickledCucumber,
                                           ),
+                                          orElse: () => throw Exception(
+                                            'Step not found $step',
+                                          ),
                                         );
                                         return refer(
                                                 'await steps.${stepMethod.methodName}')

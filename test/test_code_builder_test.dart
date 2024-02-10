@@ -80,6 +80,53 @@ runFeatures() {
         DartFormatter().format(expectedCode),
       );
     });
+
+    test('should throw explicit error on step not found', () {
+      // Given
+      final features = [
+        Feature(
+          'My feature',
+          [
+            Scenario(
+              'My scenario',
+              [
+                'Given I have a step',
+                'When I do womething',
+                'Then I should get a result',
+              ],
+            ),
+          ],
+        ),
+      ];
+      final stepMethods = [
+        StepMethod('Given I have a step', "iHaveAStep"),
+        StepMethod('When I do womething', "iDoSomething"),
+        // Last step not defined
+      ];
+      final stepDefsUri = 'package:my_app/step_defs.dart';
+      final stepDefsClassName = 'StepDefs';
+
+      // When
+      codeBuilderCallback() => codeBuilder.buildCode(
+            features,
+            stepMethods,
+            stepDefsUri,
+            stepDefsClassName,
+            pickledCucumber,
+          );
+
+      // Then
+      expect(
+        codeBuilderCallback,
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'toString',
+            'Exception: Step not found Then I should get a result',
+          ),
+        ),
+      );
+    });
   });
   group('methodApplyTo', () {
     test('should return true when method stepName matches sanitizedStep', () {
