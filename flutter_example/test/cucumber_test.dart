@@ -1,3 +1,13 @@
-import 'counter_step_definitions.pickled.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-main() => runFeatures();
+import 'counter_step_definitions.pickled.dart' as counter;
+import 'math_step_definitions.pickled.dart' as math;
+
+main() {
+  group('Counter', () {
+    counter.runFeatures();
+  });
+  group('Math', () {
+    math.runFeatures();
+  });
+}

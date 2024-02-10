@@ -7,7 +7,14 @@ import 'package:dart_style/dart_style.dart';
 import 'package:file/local.dart';
 import 'package:source_gen/source_gen.dart';
 
+///
+/// Generates the test code for the step definitions
+///
 class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
+  ///
+  /// Builds the Flutter test code for the step definitions
+  /// and the corresponding features
+  ///
   String buildCode(
     List<Feature> features,
     List<StepMethod> stepMethods,
@@ -139,7 +146,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     });
 
     return buildCode(
-      features,
+      featuresInSteps(features, stepMethods),
       stepMethods,
       classElement.librarySource.uri.pathSegments.last,
       element.displayName,
@@ -147,6 +154,26 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     );
   }
 
+  ///
+  /// Returns the features that have steps that are in the list of step methods
+  /// Other features are ignored and supposed to be defined in another step file
+  ///
+  List<Feature> featuresInSteps(
+      List<Feature> features, List<StepMethod> stepMethods) {
+    return features.where((feature) {
+      return feature.scenarios.any((scenario) {
+        return scenario.steps.any((step) {
+          return stepMethods.any((stepMethod) {
+            return stepMethod.stepName == step;
+          });
+        });
+      });
+    }).toList();
+  }
+
+  ///
+  /// Determines whether the method applies to the step or not
+  ///
   bool methodApplyTo(
     StepMethod method,
     String step,
@@ -178,6 +205,9 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     }).toList();
   }
 
+  ///
+  /// Converts a method element to a step method
+  ///
   StepMethod toStepMethod(
     List<Feature> features,
     String stepName,
