@@ -15,3 +15,8 @@
 ## 1.0.3
 
 - [Flutter] Fix: multiple steps defintion files usage
+
+## 1.0.4
+
+- [Dependencies] Bump dependencies
+- [Flutter] Fix: Flutter code generation with multiple scenarios with tags

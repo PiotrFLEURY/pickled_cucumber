@@ -21,6 +21,14 @@ runFeatures() {
           await steps.iShouldSeeJiraTicketInTheReport(widgetTester);
         },
       );
+      testWidgets(
+        'Second scenario with Jira ticket',
+        (WidgetTester widgetTester) async {
+          await steps.iHaveAScenarioWithJiraTicket(widgetTester);
+          await steps.iLinkJiraTicketToTheScenario(widgetTester);
+          await steps.iShouldSeeJiraTicketInTheReport(widgetTester);
+        },
+      );
     },
   );
 }
