@@ -36,6 +36,7 @@ class Feature {
   ///
   /// Feature: My feature
   ///
+  ///   @tag1 @tag2
   ///   Scenario: My scenario
   ///     Given I have a step
   ///     When I have another step
@@ -52,7 +53,16 @@ class Feature {
 
     Scenario? currentScenario;
 
-    for (var line in featureLines.skip(1)) {
+    final linesToParse = featureLines
+        .skip(1)
+        .map((line) => line.trim())
+        .where((line) =>
+            line.isNotEmpty &&
+            // ignore Gherkin tags
+            !line.startsWith('@'))
+        .toList();
+
+    for (var line in linesToParse) {
       if (CucumberRegex.scenario.hasMatch(line)) {
         final scenarioName = line.split(':')[1].trim();
         currentScenario = Scenario(scenarioName, []);

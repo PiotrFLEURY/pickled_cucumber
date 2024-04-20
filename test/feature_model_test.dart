@@ -97,5 +97,43 @@ void main() {
       expect(feature.scenarios[1].steps[1], equals('When I have another step'));
       expect(feature.scenarios[1].steps[2], equals('Then I have a third step'));
     });
+    test('multiple scenarios with Jira tags', () {
+      // Given
+      final featureFileContent = '''
+        Feature: My feature
+        
+          @JIRA-123 @JIRA-124
+          Scenario: My scenario
+            Given I have a step
+            When I have another step
+            Then I have a third step
+          
+          @JIRA-125 @JIRA-126
+          Scenario: My second scenario
+            Given I have a step
+            When I have another step
+            Then I have a third step
+      ''';
+      final featureLines = featureFileContent.split('\n');
+
+      // When
+      final feature = Feature.fromFeature(featureLines);
+
+      // Then
+      expect(feature.name, equals('My feature'));
+      expect(feature.scenarios.length, equals(2));
+      expect(feature.scenarios.first.name, equals('My scenario'));
+      expect(feature.scenarios.first.steps.length, equals(3));
+      expect(feature.scenarios.first.steps[0], equals('Given I have a step'));
+      expect(
+          feature.scenarios.first.steps[1], equals('When I have another step'));
+      expect(
+          feature.scenarios.first.steps[2], equals('Then I have a third step'));
+      expect(feature.scenarios[1].name, equals('My second scenario'));
+      expect(feature.scenarios[1].steps.length, equals(3));
+      expect(feature.scenarios[1].steps[0], equals('Given I have a step'));
+      expect(feature.scenarios[1].steps[1], equals('When I have another step'));
+      expect(feature.scenarios[1].steps[2], equals('Then I have a third step'));
+    });
   });
 }
