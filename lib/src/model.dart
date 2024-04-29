@@ -59,7 +59,8 @@ class Feature {
         .where((line) =>
             line.isNotEmpty &&
             // ignore Gherkin tags
-            !line.startsWith('@'))
+            !line.startsWith('@') &&
+            !line.startsWith('#'))
         .toList();
 
     for (var line in linesToParse) {

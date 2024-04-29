@@ -15,3 +15,9 @@ Feature: counter
       Given counter is 0
       When I increment counter 10 times
       Then counter should be 10
+
+    Scenario: increment counter ten times with comments
+      Given counter is 0
+      When I increment counter 10 times
+      # And whatever
+      Then counter should be 10

@@ -58,6 +58,23 @@ runFeatures() {
           );
         },
       );
+      testWidgets(
+        'increment counter ten times with comments',
+        (WidgetTester widgetTester) async {
+          await steps.counterIs(
+            widgetTester,
+            0,
+          );
+          await steps.iIncrementCounterTimes(
+            widgetTester,
+            10,
+          );
+          await steps.counterShouldBe(
+            widgetTester,
+            10,
+          );
+        },
+      );
     },
   );
 }
