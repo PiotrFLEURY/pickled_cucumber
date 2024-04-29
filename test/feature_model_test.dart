@@ -135,5 +135,42 @@ void main() {
       expect(feature.scenarios[1].steps[1], equals('When I have another step'));
       expect(feature.scenarios[1].steps[2], equals('Then I have a third step'));
     });
+    test('multiple scenarios with commented steps', () {
+      // Given
+      final featureFileContent = '''
+        Feature: My feature
+        
+          Scenario: My scenario
+            Given I have a step
+            When I have another step
+            Then I have a third step
+          
+          Scenario: My second scenario
+            Given I have a step
+            When I have another step
+            # And Whatever
+            Then I have a third step
+      ''';
+      final featureLines = featureFileContent.split('\n');
+
+      // When
+      final feature = Feature.fromFeature(featureLines);
+
+      // Then
+      expect(feature.name, equals('My feature'));
+      expect(feature.scenarios.length, equals(2));
+      expect(feature.scenarios.first.name, equals('My scenario'));
+      expect(feature.scenarios.first.steps.length, equals(3));
+      expect(feature.scenarios.first.steps[0], equals('Given I have a step'));
+      expect(
+          feature.scenarios.first.steps[1], equals('When I have another step'));
+      expect(
+          feature.scenarios.first.steps[2], equals('Then I have a third step'));
+      expect(feature.scenarios[1].name, equals('My second scenario'));
+      expect(feature.scenarios[1].steps.length, equals(3));
+      expect(feature.scenarios[1].steps[0], equals('Given I have a step'));
+      expect(feature.scenarios[1].steps[1], equals('When I have another step'));
+      expect(feature.scenarios[1].steps[2], equals('Then I have a third step'));
+    });
   });
 }

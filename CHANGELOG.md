@@ -20,3 +20,7 @@
 
 - [Dependencies] Bump dependencies
 - [Flutter] Fix: Flutter code generation with multiple scenarios with tags
+
+## 1.0.5
+
+- [Flutter] Fix: Commenting a step in a .feature file, fail the test generation
