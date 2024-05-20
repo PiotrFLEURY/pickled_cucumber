@@ -24,3 +24,7 @@
 ## 1.0.5
 
 - [Flutter] Fix: Commenting a step in a .feature file, fail the test generation
+
+## 1.0.6
+
+- [Lint] Fix deprecated usage of `withNullability` in `test_code_builder`

@@ -126,14 +126,11 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
         // get the value of the annotation
         final value = meta.computeConstantValue();
         final superValue = value?.getField('(super)');
-        if (superValue?.type?.getDisplayString(withNullability: false) ==
-            'GherkinAnnotation') {
+        if (superValue?.type?.getDisplayString() == 'GherkinAnnotation') {
           final annotationValue =
               superValue?.getField('value')?.toStringValue();
           if (annotationValue != null) {
-            final annotationName = value?.type?.getDisplayString(
-              withNullability: false,
-            );
+            final annotationName = value?.type?.getDisplayString();
             stepMethods.add(toStepMethod(
               features,
               "$annotationName $annotationValue",
