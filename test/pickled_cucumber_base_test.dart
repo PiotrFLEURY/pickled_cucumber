@@ -1,3 +1,4 @@
+import 'package:file/local.dart';
 import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:test/test.dart';
 
@@ -162,6 +163,17 @@ void main() {
         // Then
         expect(arguments, ['Piotr', 'FLEURY', 37, 1.79]);
       });
+    });
+  });
+
+  group('parseFeatures', () {
+    test('should retreive all feature files inside a folder', () {
+      final features = pickledCucumber.parseFeatures(
+        LocalFileSystem(),
+        'test/features',
+      );
+
+      expect(features.length, 2);
     });
   });
 }
