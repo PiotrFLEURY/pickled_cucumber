@@ -97,10 +97,12 @@ class PickledCucumber {
     return (success, failing);
   }
 
+  // recursive function to parse all feature files in a directory and subdirectories
+
   List<Feature> parseFeatures(FileSystem fileSystem, featureDirectoryPath) {
     final featureDirectory = fileSystem.directory(featureDirectoryPath);
     final featureFiles = featureDirectory
-        .listSync()
+        .listSync(recursive: true)
         .where(
           (file) => file.path.endsWith('.feature'),
         )

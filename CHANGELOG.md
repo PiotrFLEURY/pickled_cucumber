@@ -24,3 +24,7 @@
 ## 1.0.5
 
 - [Flutter] Fix: Commenting a step in a .feature file, fail the test generation
+
+## 1.1.0
+
+- [Flutter] Feat: Allow to store .feature files in subfolders
