@@ -69,8 +69,8 @@ class PickledCucumber {
   /// ```
   ///
   (int success, int failing) runFeatures(
-    featureDirectoryPath,
-    stepDefs, {
+    String featureDirectoryPath,
+    dynamic stepDefs, {
     FileSystem fileSystem = const LocalFileSystem(),
     Function testMethod = test,
     TestCodeBuilder? codeBuilder,

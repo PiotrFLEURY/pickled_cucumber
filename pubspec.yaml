@@ -1,6 +1,6 @@
 name: pickled_cucumber
 description: A simple cucumber implementation for Dart, Dart Frog and Flutter.
-version: 1.1.0
+version: 1.2.0
 repository: https://github.com/PiotrFLEURY/pickled_cucumber
 
 environment:
@@ -8,13 +8,14 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  analyzer: ^6.2.0
+  analyzer: ^7.4.5
   build: ^2.4.1
   code_builder: ^4.9.0
-  dart_style: ^2.3.4
+  dart_style: ^3.1.0
   file: ^7.0.0
   test: ^1.24.0
-  source_gen: ^1.4.0
+  source_gen: ^2.0.0
+  pub_semver: ^2.2.0
 
 dev_dependencies:
-  lints: ^3.0.0
+  lints: ^6.0.0

@@ -28,3 +28,7 @@
 ## 1.1.0
 
 - [Flutter] Feat: Allow to store .feature files in subfolders
+
+## 1.2.0
+
+- [Lib] Chore: Bump dependencies
