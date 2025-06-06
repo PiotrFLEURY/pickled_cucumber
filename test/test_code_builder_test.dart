@@ -3,6 +3,7 @@ import 'package:pickled_cucumber/src/model.dart';
 import 'package:pickled_cucumber/src/test_code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 void main() {
   final pickledCucumber = PickledCucumber();
@@ -77,7 +78,7 @@ runFeatures() {
 ''';
       expect(
         code,
-        DartFormatter().format(expectedCode),
+        DartFormatter(languageVersion: Version(3, 8, 0)).format(expectedCode),
       );
     });
 

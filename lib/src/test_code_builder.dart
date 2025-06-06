@@ -6,6 +6,7 @@ import 'package:pickled_cucumber/src/model.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:file/local.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 ///
 /// Generates the test code for the step definitions
@@ -93,12 +94,14 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
           ),
         ]),
     );
-    return DartFormatter().format('${library.accept(
+    return DartFormatter(languageVersion: dartVersion).format('${library.accept(
       DartEmitter(
         orderDirectives: true,
       ),
     )}');
   }
+
+  Version get dartVersion => Version(3, 8, 0);
 
   @override
   generateForAnnotatedElement(

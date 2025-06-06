@@ -4,7 +4,7 @@ import 'counter_step_definitions.pickled.dart' as counter;
 import 'math_step_definitions.pickled.dart' as math;
 import 'jira_step_definitions.pickled.dart' as jira;
 
-main() {
+void main() {
   group('Counter', () {
     counter.runFeatures();
   });
