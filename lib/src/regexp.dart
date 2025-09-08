@@ -16,6 +16,13 @@ class CucumberRegex {
   /// ```
   static final scenario = RegExp(r'Scenario:(.*)');
 
+  /// Background RegExp
+  /// Example:
+  /// ```gherkin
+  /// Background:
+  /// ```
+  static final background = RegExp(r'Background:(.*)');
+
   /// Given RegExp
   /// Example:
   /// ```gherkin

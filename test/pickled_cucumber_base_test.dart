@@ -173,7 +173,7 @@ void main() {
         'test/features',
       );
 
-      expect(features.length, 2);
+      expect(features.length, 3);
     });
   });
 }
