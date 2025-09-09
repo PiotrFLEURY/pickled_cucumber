@@ -1,12 +1,12 @@
 import 'dart:collection';
 import 'dart:mirrors';
 
+import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:pickled_cucumber/src/model.dart';
 import 'package:pickled_cucumber/src/regexp.dart';
 import 'package:pickled_cucumber/src/test_code_builder.dart';
-import 'package:file/file.dart';
-import 'package:file/local.dart';
 import 'package:test/test.dart';
 
 ///

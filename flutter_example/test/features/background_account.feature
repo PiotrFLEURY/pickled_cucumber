@@ -7,12 +7,17 @@ Feature: Create Account
     And I want to create an account
     And I should be redirected to the create account page
 
-  Scenario: Création de compte réussie avec données valides
+  Scenario: Create account successfully with valid data
     When I fill in the form with valid data
     And I click on create account button
     Then I should be redirected to the select team page
 
-  Scenario: Création de compte échouée avec email invalide
+  Scenario: Create account successfully with dynamic data
+    When I fill in the form with email "cucumber@test.com"
+    And I click on create account button
+    Then I should be redirected to the select team page
+
+  Scenario: Create account failed with invalid email
     When I fill in the form with invalid email
     And I click on create account button
     Then I should see an error message

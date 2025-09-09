@@ -58,7 +58,6 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                   ])
                                   ..body = Block.of(
                                     [
-                                      // Add background steps before scenario steps
                                       ...feature.backgroundSteps.map(
                                         (step) {
                                           StepMethod stepMethod =
