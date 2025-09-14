@@ -340,3 +340,11 @@ flutter test integration_test/app_test.dart
 - [Learn Dart](https://dart.dev/guides)
 - [Learn Dart Frog](https://dartfrog.vgv.dev/)
 - [Learn Flutter](https://flutter.dev/docs)
+
+## Contributors
+
+Really thanks to the open source contributors on this project !
+
+* [@mmarchar](https://github.com/mmarchal)
+
+* [@FlorianFlouquet](https://github.com/FlorianFlouquet)

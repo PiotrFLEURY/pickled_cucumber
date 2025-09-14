@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pickled_cucumber/pickled_cucumber.dart';
+import 'package:pickled_cucumber/src/annotations.dart';
 
 @StepDefinition()
 class BackgroundAccountStepDefinitions {
