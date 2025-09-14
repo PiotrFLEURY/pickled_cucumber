@@ -32,3 +32,7 @@
 ## 1.2.0
 
 - [Lib] Chore: Bump dependencies
+
+## 1.3.0
+
+- [Flutter] Feat: Implement Cucumber Background steps in code generation
