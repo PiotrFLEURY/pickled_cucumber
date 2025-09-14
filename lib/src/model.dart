@@ -24,8 +24,11 @@ class Feature {
   /// The scenarios of the feature
   final List<Scenario> scenarios;
 
+  /// The background steps that should be executed before each scenario
+  final List<String> backgroundSteps;
+
   /// Creates a new instance of [Feature]
-  Feature(this.name, this.scenarios);
+  Feature(this.name, this.scenarios, {this.backgroundSteps = const []});
 
   ///
   /// Parses a feature from a list of lines
@@ -50,8 +53,10 @@ class Feature {
   factory Feature.fromFeature(List<String> featureLines) {
     final name = featureLines.first.split(':')[1].trim();
     final scenarios = <Scenario>[];
+    final backgroundSteps = <String>[];
 
     Scenario? currentScenario;
+    bool inBackground = false;
 
     final linesToParse = featureLines
         .skip(1)
@@ -64,15 +69,23 @@ class Feature {
         .toList();
 
     for (var line in linesToParse) {
-      if (CucumberRegex.scenario.hasMatch(line)) {
+      if (CucumberRegex.background.hasMatch(line)) {
+        inBackground = true;
+        currentScenario = null;
+      } else if (CucumberRegex.scenario.hasMatch(line)) {
         final scenarioName = line.split(':')[1].trim();
         currentScenario = Scenario(scenarioName, []);
         scenarios.add(currentScenario);
-      } else if (currentScenario != null && line.trim().isNotEmpty) {
-        currentScenario.steps.add(line.trim());
+        inBackground = false;
+      } else if (line.trim().isNotEmpty) {
+        if (inBackground) {
+          backgroundSteps.add(line.trim());
+        } else if (currentScenario != null) {
+          currentScenario.steps.add(line.trim());
+        }
       }
     }
-    return Feature(name, scenarios);
+    return Feature(name, scenarios, backgroundSteps: backgroundSteps);
   }
 }
 

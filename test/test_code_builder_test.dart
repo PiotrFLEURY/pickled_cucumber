@@ -1,9 +1,9 @@
+import 'package:dart_style/dart_style.dart';
 import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:pickled_cucumber/src/model.dart';
 import 'package:pickled_cucumber/src/test_code_builder.dart';
-import 'package:dart_style/dart_style.dart';
-import 'package:test/test.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:test/test.dart';
 
 void main() {
   final pickledCucumber = PickledCucumber();
@@ -126,6 +126,95 @@ runFeatures() {
             'Exception: Step not found Then I should get a result',
           ),
         ),
+      );
+    });
+
+    test('should build code for a feature with background', () {
+      // Given
+      final features = [
+        Feature(
+          'My feature with background',
+          [
+            Scenario(
+              'My first scenario',
+              [
+                'When I perform an action',
+                'Then I should see a result',
+              ],
+            ),
+            Scenario(
+              'My second scenario',
+              [
+                'When I perform another action',
+                'Then I should see another result',
+              ],
+            ),
+          ],
+          backgroundSteps: [
+            'Given I am on the splash screen',
+            'And I redirected to the login page',
+          ],
+        ),
+      ];
+      final stepMethods = [
+        StepMethod('Given I am on the splash screen', "iAmOnTheSplashScreen"),
+        StepMethod(
+            'And I redirected to the login page', "iRedirectedToTheLoginPage"),
+        StepMethod('When I perform an action', "iPerformAnAction"),
+        StepMethod('Then I should see a result', "iShouldSeeAResult"),
+        StepMethod('When I perform another action', "iPerformAnotherAction"),
+        StepMethod(
+            'Then I should see another result', "iShouldSeeAnotherResult"),
+      ];
+      final stepDefsUri = 'package:my_app/step_defs.dart';
+      final stepDefsClassName = 'StepDefs';
+
+      // When
+      final code = codeBuilder.buildCode(
+        features,
+        stepMethods,
+        stepDefsUri,
+        stepDefsClassName,
+        pickledCucumber,
+      );
+
+      // Then
+      final expectedCode = '''
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/step_defs.dart';
+
+runFeatures() {
+  final steps = StepDefs();
+  group(
+    'My feature with background',
+    () {
+      testWidgets(
+        'My first scenario',
+        (WidgetTester widgetTester) async {
+          await steps.iAmOnTheSplashScreen(widgetTester);
+          await steps.iRedirectedToTheLoginPage(widgetTester);
+          await steps.iPerformAnAction(widgetTester);
+          await steps.iShouldSeeAResult(widgetTester);
+        },
+      );
+      testWidgets(
+        'My second scenario',
+        (WidgetTester widgetTester) async {
+          await steps.iAmOnTheSplashScreen(widgetTester);
+          await steps.iRedirectedToTheLoginPage(widgetTester);
+          await steps.iPerformAnotherAction(widgetTester);
+          await steps.iShouldSeeAnotherResult(widgetTester);
+        },
+      );
+    },
+  );
+}
+
+
+''';
+      expect(
+        code,
+        DartFormatter(languageVersion: Version(3, 8, 0)).format(expectedCode),
       );
     });
   });

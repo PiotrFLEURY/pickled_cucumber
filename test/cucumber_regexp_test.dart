@@ -122,5 +122,19 @@ void main() {
       expect(match, isNotNull);
       expect(match?.group(1), equals('42.42'));
     });
+
+    test('background', () {
+      final regex = CucumberRegex.background;
+      final match = regex.firstMatch('Background:');
+      expect(match, isNotNull);
+      expect(match!.group(1)!.trim(), isEmpty);
+    });
+
+    test('background with description', () {
+      final regex = CucumberRegex.background;
+      final match = regex.firstMatch('Background: Common setup steps');
+      expect(match, isNotNull);
+      expect(match!.group(1)!.trim(), equals('Common setup steps'));
+    });
   });
 }

@@ -172,5 +172,48 @@ void main() {
       expect(feature.scenarios[1].steps[1], equals('When I have another step'));
       expect(feature.scenarios[1].steps[2], equals('Then I have a third step'));
     });
+    test('with background', () {
+      // Given
+      final featureFileContent = '''
+        Feature: My feature with background
+        
+          Background:
+            Given I am on the splash screen
+            And I redirected to the login page
+        
+          Scenario: My first scenario
+            When I perform an action
+            Then I should see a result
+            
+          Scenario: My second scenario
+            When I perform another action
+            Then I should see another result
+      ''';
+      final featureLines = featureFileContent.split('\n');
+
+      // When
+      final feature = Feature.fromFeature(featureLines);
+
+      // Then
+      expect(feature.name, equals('My feature with background'));
+      expect(feature.backgroundSteps.length, equals(2));
+      expect(feature.backgroundSteps[0],
+          equals('Given I am on the splash screen'));
+      expect(feature.backgroundSteps[1],
+          equals('And I redirected to the login page'));
+      expect(feature.scenarios.length, equals(2));
+      expect(feature.scenarios.first.name, equals('My first scenario'));
+      expect(feature.scenarios.first.steps.length, equals(2));
+      expect(
+          feature.scenarios.first.steps[0], equals('When I perform an action'));
+      expect(feature.scenarios.first.steps[1],
+          equals('Then I should see a result'));
+      expect(feature.scenarios[1].name, equals('My second scenario'));
+      expect(feature.scenarios[1].steps.length, equals(2));
+      expect(feature.scenarios[1].steps[0],
+          equals('When I perform another action'));
+      expect(feature.scenarios[1].steps[1],
+          equals('Then I should see another result'));
+    });
   });
 }

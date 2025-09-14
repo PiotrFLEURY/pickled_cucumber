@@ -1,12 +1,12 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:pickled_cucumber/pickled_cucumber.dart';
-import 'package:pickled_cucumber/src/model.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:file/local.dart';
-import 'package:source_gen/source_gen.dart';
+import 'package:pickled_cucumber/pickled_cucumber.dart';
+import 'package:pickled_cucumber/src/model.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:source_gen/source_gen.dart';
 
 ///
 /// Generates the test code for the step definitions
@@ -57,32 +57,61 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
                                     ),
                                   ])
                                   ..body = Block.of(
-                                    scenario.steps.map(
-                                      (step) {
-                                        StepMethod stepMethod =
-                                            stepMethods.firstWhere(
-                                          (method) => methodApplyTo(
-                                            method,
-                                            step,
-                                            pickledCucumber,
-                                          ),
-                                          orElse: () => throw Exception(
-                                            'Step not found $step',
-                                          ),
-                                        );
-                                        return refer(
-                                                'await steps.${stepMethod.methodName}')
-                                            .call(
-                                          [
-                                            refer('widgetTester'),
-                                            ...orderedArguments(
-                                              pickledCucumber,
+                                    [
+                                      ...feature.backgroundSteps.map(
+                                        (step) {
+                                          StepMethod stepMethod =
+                                              stepMethods.firstWhere(
+                                            (method) => methodApplyTo(
+                                              method,
                                               step,
-                                            )
-                                          ],
-                                        ).statement;
-                                      },
-                                    ).toList(),
+                                              pickledCucumber,
+                                            ),
+                                            orElse: () => throw Exception(
+                                              'Background step not found $step',
+                                            ),
+                                          );
+                                          return refer(
+                                                  'await steps.${stepMethod.methodName}')
+                                              .call(
+                                            [
+                                              refer('widgetTester'),
+                                              ...orderedArguments(
+                                                pickledCucumber,
+                                                step,
+                                              )
+                                            ],
+                                          ).statement;
+                                        },
+                                      ),
+                                      // Add scenario steps
+                                      ...scenario.steps.map(
+                                        (step) {
+                                          StepMethod stepMethod =
+                                              stepMethods.firstWhere(
+                                            (method) => methodApplyTo(
+                                              method,
+                                              step,
+                                              pickledCucumber,
+                                            ),
+                                            orElse: () => throw Exception(
+                                              'Step not found $step',
+                                            ),
+                                          );
+                                          return refer(
+                                                  'await steps.${stepMethod.methodName}')
+                                              .call(
+                                            [
+                                              refer('widgetTester'),
+                                              ...orderedArguments(
+                                                pickledCucumber,
+                                                step,
+                                              )
+                                            ],
+                                          ).statement;
+                                        },
+                                      ),
+                                    ],
                                   ),
                               ).closure,
                             ],
