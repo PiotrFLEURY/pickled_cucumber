@@ -17,14 +17,14 @@ Works with **[🎯 Dart](#dart-usage)**, **[🐸 Dart Frog](#dart-frog-usage)** 
 - [🥒 Pickled cucumber 🎯](#-pickled-cucumber-)
   - [Table of contents](#table-of-contents)
   - [Getting started](#getting-started)
-  - [Features](#features)
-    - [Background Steps](#background-steps)
   - [Usage](#usage)
     - [🎯 Dart usage](#dart-usage)
     - [🐸 Dart Frog usage](#dart-frog-usage)
     - [🐦 Flutter usage](#flutter-usage)
       - [Run your tests as Widget tests](#run-your-tests-as-widget-tests)
       - [Run your tests as Integration tests](#run-your-tests-as-integration-tests)
+  - [Additional features](#additional-features)
+    - [Background Steps](#background-steps)
   - [Links](#links)
 
 ## Getting started
@@ -41,44 +41,6 @@ or add it manually:
 dependencies:
   pickled_cucumber: ^1.0.0 # use the latest version
 ```
-
-## Features
-
-### Background Steps
-
-Pickled Cucumber supports **Background** steps, which are common steps that run before each scenario in a feature file. This powerful feature allows you to:
-
-- **Eliminate code duplication**: Define common setup steps once instead of repeating them in every scenario
-- **Improve test readability**: Keep scenarios focused on their specific logic by moving setup to the background
-- **Ensure consistent test state**: All scenarios start from the same well-defined initial state
-- **Simplify maintenance**: Update common setup logic in one place
-
-#### Syntax
-
-```gherkin
-Feature: User Management
-
-  Background:
-    Given the application is running
-    And I am logged in as an administrator
-    And I navigate to the user management page
-
-  Scenario: Create new user
-    When I click on "Add User" button
-    And I fill in the user form
-    Then a new user should be created
-
-  Scenario: Delete existing user
-    When I select an existing user
-    And I click on "Delete" button
-    Then the user should be removed from the list
-```
-
-#### How it works
-
-1. **Execution order**: For each scenario, Pickled Cucumber first executes all steps defined in the `Background` section, then executes the scenario's own steps
-2. **Isolation**: Each scenario gets a fresh execution of the background steps, ensuring test isolation
-3. **Inheritance**: All scenarios in the same feature file automatically inherit the background steps
 
 ## Usage
 
@@ -334,6 +296,44 @@ Run your tests
 flutter test integration_test/app_test.dart
 ```
 
+## Additional features
+
+### Background Steps
+
+Pickled Cucumber supports **Background** steps, which are common steps that run before each scenario in a feature file. This powerful feature allows you to:
+
+- **Eliminate code duplication**: Define common setup steps once instead of repeating them in every scenario
+- **Improve test readability**: Keep scenarios focused on their specific logic by moving setup to the background
+- **Ensure consistent test state**: All scenarios start from the same well-defined initial state
+- **Simplify maintenance**: Update common setup logic in one place
+
+#### Syntax
+
+```gherkin
+Feature: User Management
+
+  Background:
+    Given the application is running
+    And I am logged in as an administrator
+    And I navigate to the user management page
+
+  Scenario: Create new user
+    When I click on "Add User" button
+    And I fill in the user form
+    Then a new user should be created
+
+  Scenario: Delete existing user
+    When I select an existing user
+    And I click on "Delete" button
+    Then the user should be removed from the list
+```
+
+#### How it works
+
+1. **Execution order**: For each scenario, Pickled Cucumber first executes all steps defined in the `Background` section, then executes the scenario's own steps
+2. **Isolation**: Each scenario gets a fresh execution of the background steps, ensuring test isolation
+3. **Inheritance**: All scenarios in the same feature file automatically inherit the background steps
+
 ## Links
 
 - [Learn Cucumber](https://cucumber.io/docs/guides/overview/)
@@ -345,6 +345,6 @@ flutter test integration_test/app_test.dart
 
 Really thanks to the open source contributors on this project !
 
-* [@mmarchar](https://github.com/mmarchal)
+* [@mmarchal](https://github.com/mmarchal)
 
 * [@FlorianFlouquet](https://github.com/FlorianFlouquet)
