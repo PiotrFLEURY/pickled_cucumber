@@ -36,3 +36,7 @@
 ## 1.3.0
 
 - [Flutter] Feat: Implement Cucumber Background steps in code generation
+
+## 1.3.1
+
+- [Lib] Docs: Fix README documentation
