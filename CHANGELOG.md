@@ -40,3 +40,7 @@
 ## 1.3.1
 
 - [Lib] Docs: Fix README documentation
+
+## 1.4.0
+
+- [Lib] Chore: bump dependencies
