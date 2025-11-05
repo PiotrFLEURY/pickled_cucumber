@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
@@ -133,12 +133,12 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
   Version get dartVersion => Version(3, 8, 0);
 
   @override
-  generateForAnnotatedElement(
-    Element element,
+  Future<String?> generateForAnnotatedElement(
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final classElement = element as ClassElement;
+    final classElement = element as ClassElement2;
     final lib = LibraryReader(await buildStep.inputLibrary);
 
     final pickledCucumber = PickledCucumber();
@@ -150,22 +150,19 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
 
     final stepMethods = <StepMethod>[];
     lib.allElements
-        .whereType<ClassElement>()
+        .whereType<ClassElement2>()
         .first // should manage all classes
-        .methods
+        .methods2
         .forEach((methodElement) {
-      for (var meta in methodElement.metadata) {
+      for (var meta in methodElement.metadata2.annotations) {
         // get the value of the annotation
         final value = meta.computeConstantValue();
         final superValue = value?.getField('(super)');
-        if (superValue?.type?.getDisplayString(withNullability: false) ==
-            'GherkinAnnotation') {
+        if (superValue?.type?.getDisplayString() == 'GherkinAnnotation') {
           final annotationValue =
               superValue?.getField('value')?.toStringValue();
           if (annotationValue != null) {
-            final annotationName = value?.type?.getDisplayString(
-              withNullability: false,
-            );
+            final annotationName = value?.type?.getDisplayString();
             stepMethods.add(toStepMethod(
               features,
               "$annotationName $annotationValue",
@@ -180,7 +177,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     return buildCode(
       featuresInSteps(features, stepMethods),
       stepMethods,
-      classElement.librarySource.uri.pathSegments.last,
+      classElement.library2.uri.pathSegments.last,
       element.displayName,
       pickledCucumber,
     );
@@ -243,7 +240,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
   StepMethod toStepMethod(
     List<Feature> features,
     String stepName,
-    MethodElement methodElement,
+    MethodElement2 methodElement,
     PickledCucumber pickledCucumber,
   ) {
     final methodName = methodElement.displayName;
