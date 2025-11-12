@@ -348,3 +348,5 @@ Really thanks to the open source contributors on this project !
 * [@mmarchal](https://github.com/mmarchal)
 
 * [@FlorianFlouquet](https://github.com/FlorianFlouquet)
+
+* [@RBisiaux](https://github.com/RBisiaux)
