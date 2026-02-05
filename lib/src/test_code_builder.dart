@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
@@ -134,11 +134,11 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
 
   @override
   Future<String?> generateForAnnotatedElement(
-    Element2 element,
+    Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final classElement = element as ClassElement2;
+    final classElement = element as ClassElement;
     final lib = LibraryReader(await buildStep.inputLibrary);
 
     final pickledCucumber = PickledCucumber();
@@ -150,11 +150,11 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
 
     final stepMethods = <StepMethod>[];
     lib.allElements
-        .whereType<ClassElement2>()
+        .whereType<ClassElement>()
         .first // should manage all classes
-        .methods2
+        .methods
         .forEach((methodElement) {
-      for (var meta in methodElement.metadata2.annotations) {
+      for (var meta in methodElement.metadata.annotations) {
         // get the value of the annotation
         final value = meta.computeConstantValue();
         final superValue = value?.getField('(super)');
@@ -177,7 +177,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     return buildCode(
       featuresInSteps(features, stepMethods),
       stepMethods,
-      classElement.library2.uri.pathSegments.last,
+      classElement.library.uri.pathSegments.last,
       element.displayName,
       pickledCucumber,
     );
@@ -240,7 +240,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
   StepMethod toStepMethod(
     List<Feature> features,
     String stepName,
-    MethodElement2 methodElement,
+    MethodElement methodElement,
     PickledCucumber pickledCucumber,
   ) {
     final methodName = methodElement.displayName;
