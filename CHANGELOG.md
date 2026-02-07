@@ -48,3 +48,7 @@
 ## 1.5.0
 
 - [Lib] Chore: bump analyzer dependency 7.0.0 -> 8.0.0
+
+## 1.5.1
+
+- [Lib] Fix: Step methods resolution from library file with multiple classes. Fixes #51

@@ -148,31 +148,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
       'test/features/',
     );
 
-    final stepMethods = <StepMethod>[];
-    lib.allElements
-        .whereType<ClassElement>()
-        .first // should manage all classes
-        .methods
-        .forEach((methodElement) {
-      for (var meta in methodElement.metadata.annotations) {
-        // get the value of the annotation
-        final value = meta.computeConstantValue();
-        final superValue = value?.getField('(super)');
-        if (superValue?.type?.getDisplayString() == 'GherkinAnnotation') {
-          final annotationValue =
-              superValue?.getField('value')?.toStringValue();
-          if (annotationValue != null) {
-            final annotationName = value?.type?.getDisplayString();
-            stepMethods.add(toStepMethod(
-              features,
-              "$annotationName $annotationValue",
-              methodElement,
-              pickledCucumber,
-            ));
-          }
-        }
-      }
-    });
+    final stepMethods = resolveStepMethods(lib, features, pickledCucumber);
 
     return buildCode(
       featuresInSteps(features, stepMethods),
@@ -181,6 +157,49 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
       element.displayName,
       pickledCucumber,
     );
+  }
+
+  ///
+  /// Resolves the step methods from the library file
+  ///
+  List<StepMethod> resolveStepMethods(LibraryReader lib, List<Feature> features,
+      PickledCucumber pickledCucumber) {
+    return lib.allElements
+        .whereType<ClassElement>()
+        // Filter only classes with @StepDefinition annotation
+        .where((classElement) => classElement.metadata.annotations.any((meta) {
+              final value = meta.computeConstantValue();
+              return value?.type?.getDisplayString() == 'StepDefinition';
+            }))
+        .expand((classElement) => classElement.methods)
+        .expand((methodElement) => methodElement.metadata.annotations.map(
+            (meta) => resolveStepMethod(
+                meta, features, methodElement, pickledCucumber)))
+        .whereType<StepMethod>()
+        .toList();
+  }
+
+  ///
+  /// Resolves a step method from an annotation
+  ///
+  StepMethod? resolveStepMethod(ElementAnnotation meta, List<Feature> features,
+      MethodElement methodElement, PickledCucumber pickledCucumber) {
+    // get the value of the annotation
+    final value = meta.computeConstantValue();
+    final superValue = value?.getField('(super)');
+    if (superValue?.type?.getDisplayString() == 'GherkinAnnotation') {
+      final annotationValue = superValue?.getField('value')?.toStringValue();
+      if (annotationValue != null) {
+        final annotationName = value?.type?.getDisplayString();
+        return toStepMethod(
+          features,
+          "$annotationName $annotationValue",
+          methodElement,
+          pickledCucumber,
+        );
+      }
+    }
+    return null;
   }
 
   ///

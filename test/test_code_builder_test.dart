@@ -1,8 +1,12 @@
+import 'package:build/build.dart';
+import 'package:build_test/build_test.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:pickled_cucumber/pickled_cucumber.dart';
 import 'package:pickled_cucumber/src/model.dart';
 import 'package:pickled_cucumber/src/test_code_builder.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:source_gen/source_gen.dart';
+import 'package:source_gen_test/source_gen_test.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -311,6 +315,138 @@ runFeatures() {
               expectedFeature.scenarios[i].steps[j]);
         }
       }
+    });
+  });
+
+  group('resolveStepMethods', () {
+    initializeBuildLogTracking();
+
+    test('should find steps in first class', () async {
+      const source = '''
+      import 'package:pickled_cucumber/pickled_cucumber.dart';
+
+      @StepDefinition()
+      class FirstClass {
+        @Given('I am on the homepage')
+        void onHomepage() {}
+      }
+
+      // We need to define annotations in the same file to be able to resolve them using test builder
+      abstract class GherkinAnnotation {
+        /// The value of the annotation.
+        /// eg. `@Given('I have a step')` => `I have a step`
+        final String value;
+
+        /// Creates a new instance of [GherkinAnnotation].
+        const GherkinAnnotation(this.value);
+      }
+
+      /// Given annotation.
+      /// Used to mark a method as a Given step.
+      class Given extends GherkinAnnotation {
+        /// Creates a new instance of [Given].
+        const Given(super.value);
+      }
+
+      /// StepDefinition annotation.
+      /// Used to mark a class as a step definition.
+      class StepDefinition {
+        /// Creates a new instance of [StepDefinition].
+        const StepDefinition();
+      }
+    ''';
+
+      final inputId = AssetId.parse('test|test.dart');
+      final library = await resolveSource(
+        source,
+        (resolver) => resolver.libraryFor(inputId),
+        inputId: inputId,
+      );
+
+      final libReader = LibraryReader(library);
+      final features = [
+        Feature(
+          'My feature',
+          [
+            Scenario(
+              'My scenario',
+              [
+                'Given I am on the homepage',
+              ],
+            ),
+          ],
+        ),
+      ];
+
+      final methods =
+          codeBuilder.resolveStepMethods(libReader, features, pickledCucumber);
+
+      expect(methods.any((m) => m.methodName == 'onHomepage'), isTrue);
+    });
+
+    test('should find steps in second class', () async {
+      const source = '''
+      import 'package:pickled_cucumber/pickled_cucumber.dart';
+
+      class FirstClass {}
+
+      @StepDefinition()
+      class SecondClass {
+        @Given('I am on the homepage')
+        void onHomepage() {}
+      }
+
+      // We need to define annotations in the same file to be able to resolve them using test builder
+      abstract class GherkinAnnotation {
+        /// The value of the annotation.
+        /// eg. `@Given('I have a step')` => `I have a step`
+        final String value;
+
+        /// Creates a new instance of [GherkinAnnotation].
+        const GherkinAnnotation(this.value);
+      }
+
+      /// Given annotation.
+      /// Used to mark a method as a Given step.
+      class Given extends GherkinAnnotation {
+        /// Creates a new instance of [Given].
+        const Given(super.value);
+      }
+
+      /// StepDefinition annotation.
+      /// Used to mark a class as a step definition.
+      class StepDefinition {
+        /// Creates a new instance of [StepDefinition].
+        const StepDefinition();
+      }
+    ''';
+
+      final inputId = AssetId.parse('test|test.dart');
+      final library = await resolveSource(
+        source,
+        (resolver) => resolver.libraryFor(inputId),
+        inputId: inputId,
+      );
+
+      final libReader = LibraryReader(library);
+      final features = [
+        Feature(
+          'My feature',
+          [
+            Scenario(
+              'My scenario',
+              [
+                'Given I am on the homepage',
+              ],
+            ),
+          ],
+        ),
+      ];
+
+      final methods =
+          codeBuilder.resolveStepMethods(libReader, features, pickledCucumber);
+
+      expect(methods.any((m) => m.methodName == 'onHomepage'), isTrue);
     });
   });
 }
