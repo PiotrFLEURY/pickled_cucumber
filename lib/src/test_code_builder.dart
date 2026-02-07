@@ -151,7 +151,7 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
     final stepMethods = resolveStepMethods(lib, features, pickledCucumber);
 
     return buildCode(
-      featuresInSteps(features, stepMethods),
+      featuresInSteps(pickledCucumber, features, stepMethods),
       stepMethods,
       classElement.library.uri.pathSegments.last,
       element.displayName,
@@ -206,13 +206,14 @@ class TestCodeBuilder extends GeneratorForAnnotation<StepDefinition> {
   /// Returns the features that have steps that are in the list of step methods
   /// Other features are ignored and supposed to be defined in another step file
   ///
-  List<Feature> featuresInSteps(
+  List<Feature> featuresInSteps(PickledCucumber pickledCucumber,
       List<Feature> features, List<StepMethod> stepMethods) {
     return features.where((feature) {
       return feature.scenarios.any((scenario) {
         return scenario.steps.any((step) {
+          final sanitizedStep = pickledCucumber.sanytizeStep(step);
           return stepMethods.any((stepMethod) {
-            return stepMethod.stepName == step;
+            return stepMethod.stepName == sanitizedStep;
           });
         });
       });

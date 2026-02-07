@@ -24,7 +24,7 @@ void main() {
               'My scenario',
               [
                 'Given I have a step',
-                'When I do womething',
+                'When I do something',
                 'Then I should get a result',
                 'And being able to use "string value" and 42 numbers',
               ],
@@ -34,7 +34,7 @@ void main() {
       ];
       final stepMethods = [
         StepMethod('Given I have a step', "iHaveAStep"),
-        StepMethod('When I do womething', "iDoSomething"),
+        StepMethod('When I do something', "iDoSomething"),
         StepMethod('Then I should get a result', "iShouldGetAResult"),
         StepMethod('And being able to use {string} and {int} numbers',
             "beingAbleToUseStringAndInt"),
@@ -96,7 +96,7 @@ runFeatures() {
               'My scenario',
               [
                 'Given I have a step',
-                'When I do womething',
+                'When I do something',
                 'Then I should get a result',
               ],
             ),
@@ -105,7 +105,7 @@ runFeatures() {
       ];
       final stepMethods = [
         StepMethod('Given I have a step', "iHaveAStep"),
-        StepMethod('When I do womething', "iDoSomething"),
+        StepMethod('When I do something', "iDoSomething"),
         // Last step not defined
       ];
       final stepDefsUri = 'package:my_app/step_defs.dart';
@@ -260,7 +260,7 @@ runFeatures() {
               'My scenario',
               [
                 'Given I have a step',
-                'When I do womething',
+                'When I do something',
                 'Then I should get a result',
               ],
             ),
@@ -282,12 +282,13 @@ runFeatures() {
       ];
       final stepMethods = [
         StepMethod('Given I have a step', "iHaveAStep"),
-        StepMethod('When I do womething', "iDoSomething"),
+        StepMethod('When I do something', "iDoSomething"),
         StepMethod('Then I should get a result', "iShouldGetAResult"),
       ];
 
       // When
-      final result = codeBuilder.featuresInSteps(features, stepMethods);
+      final result =
+          codeBuilder.featuresInSteps(pickledCucumber, features, stepMethods);
 
       // Then
       final expectedFeature = Feature(
@@ -297,8 +298,64 @@ runFeatures() {
             'My scenario',
             [
               'Given I have a step',
-              'When I do womething',
+              'When I do something',
               'Then I should get a result',
+            ],
+          ),
+        ],
+      );
+      expect(result.length, 1);
+      expect(result[0].name, expectedFeature.name);
+      expect(result[0].scenarios.length, expectedFeature.scenarios.length);
+      for (var i = 0; i < result[0].scenarios.length; i++) {
+        expect(result[0].scenarios[i].name, expectedFeature.scenarios[i].name);
+        expect(result[0].scenarios[i].steps.length,
+            expectedFeature.scenarios[i].steps.length);
+        for (var j = 0; j < result[0].scenarios[i].steps.length; j++) {
+          expect(result[0].scenarios[i].steps[j],
+              expectedFeature.scenarios[i].steps[j]);
+        }
+      }
+    });
+
+    test('should work when scenario only contains parametrized steps', () {
+      // Given
+      final features = [
+        Feature(
+          'My feature',
+          [
+            Scenario(
+              'My scenario',
+              [
+                'Given I have a step named "Piotr"',
+                'When I do something with "Piotr"',
+                'Then I should get a result for "Piotr"',
+              ],
+            ),
+          ],
+        ),
+      ];
+      final stepMethods = [
+        StepMethod('Given I have a step named {string}', "iHaveAStep"),
+        StepMethod('When I do something with {string}', "iDoSomething"),
+        StepMethod(
+            'Then I should get a result for {string}', "iShouldGetAResult"),
+      ];
+
+      // When
+      final result =
+          codeBuilder.featuresInSteps(pickledCucumber, features, stepMethods);
+
+      // Then
+      final expectedFeature = Feature(
+        'My feature',
+        [
+          Scenario(
+            'My scenario',
+            [
+              'Given I have a step named "Piotr"',
+              'When I do something with "Piotr"',
+              'Then I should get a result for "Piotr"',
             ],
           ),
         ],
