@@ -15,8 +15,10 @@ include: package:lints/recommended.yaml
 
 # Uncomment the following section to specify additional rules.
 
-# linter:
-#   rules:
+linter:
+  rules:
+    - directives_ordering: true
+    - prefer_final_locals: true
 #     - camel_case_types
 
 analyzer:
