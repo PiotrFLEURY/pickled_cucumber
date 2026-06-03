@@ -53,3 +53,7 @@
 
 - [Lib] Fix: Step methods resolution from library file with multiple classes. Fixes [#51](https://github.com/PiotrFLEURY/pickled_cucumber/issues/51)
 - [Lib] Fix: Only parametrized steps resolution in scenarios. Fixes [#28](https://github.com/PiotrFLEURY/pickled_cucumber/issues/28)
+
+## 1.5.0
+
+- [Lib] Chore: bump analyzer dependency 8.0.0 -> 9.0.0
