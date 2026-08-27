@@ -57,3 +57,7 @@
 ## 1.6.0
 
 - [Lib] Chore: bump analyzer dependency 8.0.0 -> 9.0.0
+
+## 1.7.0
+
+- [Lib] Chore: bump analyzer dependency 9.0.0 -> 13.0.0
